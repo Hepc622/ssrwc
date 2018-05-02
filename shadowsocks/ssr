@@ -1,0 +1,34 @@
+#!/bin/bash  
+
+# description: SSR Start Stop Restart  ,在服务器上注意要转成unix格式（set ff=unix）
+# processname: 自定义ssr的service脚本 
+# chkconfig: 234 20 80  
+# 2345指脚本运行级别，234为文本界面，5为图形界面，60为脚本启动的次序号，20为脚本停止
+SSR_HOME=/usr/local/ssr/ssrwc/shadowsocks
+
+case $1 in  
+
+start)  
+
+sh $SSR_HOME/run.sh  
+echo "SSR and ssrwc is running!"
+
+;;   
+
+stop)     
+
+sh $SSR_HOME/stop.sh  
+echo "SSR and ssrwc is stop!"
+;;   
+
+restart)  
+
+sh $SSR_HOME/run.sh  
+
+sh $SSR_HOME/stop.sh
+echo "SSR and ssrwc is restart!"
+;;   
+
+esac      
+
+exit 0

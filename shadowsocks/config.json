@@ -1,0 +1,41 @@
+{
+	"server": "0.0.0.0",
+	"server_ipv6": "::",
+	"server_port": 8399,
+	"local_address": "127.0.0.1",
+	"local_port": 1080,
+	"password": "m",
+	"method": "aes-128-ctr",
+	"port_password": {
+		"9907": {
+			"mark": 0,
+			"id": "979b8c7b-4d20-11e8-a97d-1ee9d36fdecb",
+			"userId": "979b8c7a-4d20-11e8-94f1-1ee9d36fdecb",
+			"userName": "hpc",
+			"password": "123456",
+			"port": "9907",
+			"method": "aes-256-cfb",
+			"protocol": "http_simple",
+			"obfs": "http_simple",
+			"remain": 100000,
+			"used": 0,
+			"total": 100000,
+			"beginTm": "2018-05-01",
+			"endTm": "2018-12-02"
+		}
+	},
+	"protocol": "auth_aes128_md5",
+	"protocol_param": "",
+	"obfs": "tls1.2_ticket_auth_compatible",
+	"obfs_param": "",
+	"speed_limit_per_con": 0,
+	"speed_limit_per_user": 0,
+	"additional_ports": {},
+	"additional_ports_only": false,
+	"timeout": 120,
+	"udp_timeout": 60,
+	"dns_ipv6": false,
+	"connect_verbose_info": 0,
+	"redirect": "",
+	"fast_open": false
+}

@@ -1,0 +1,27 @@
+user:
+  root
+password:
+  ssr@123SSR
+database:
+  ssr
+host:
+  localhost
+port:
+  3306
+charset:
+  utf8
+#  链接池最大值
+maxPoolSize:
+  20
+#  链接池最小值
+minPoolSize:
+  1
+#  初始化连接池值
+initPoolSize:
+  5
+#  如果链接全部用完了，就等待，多少时间(秒)
+waitTime:
+  0.001
+# 连接关闭时默认将所有未提交的操作回滚 默认是false
+autoCommitOnClose:
+  false

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../res/layui/css/layui.css" media="all">
+</head>
+<body>
+    <div>
+        <!--用户基本信息-->
+        <div class="layui-form-item" style="margin: 10px">
+            <label class="layui-form-label">起始日期</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" name="begin" id="qBegin" placeholder="yyyy-MM-dd">
+            </div>
+            <label class="layui-form-label">截止日期</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" name="end" id="qEnd" placeholder="yyyy-MM-dd">
+            </div>
+            <div class="layui-input-inline">
+                <button class="layui-btn" id="query" data-type="query">查询</button>
+                <button class="layui-btn" id="add"  data-type="add">添加</button>
+            </div>
+        </div>
+    </div>
+    <table class="layui-table" id="customerInfo" lay-filter="customer"></table>
+    <div id="id" hidden style="margin: 13px">
+        <form class="layui-form layui-form-pane" id="saveOrUpdateForm">
+            <!--用户基本信息-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户ID</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="id" hidden >
+                    <input type="text" name="userId" disabled="" autocomplete="off" placeholder="用户ID" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">不可更改</div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="userName" lay-verify="required" placeholder="用户名" autocomplete="off" class="layui-input">
+                </div>
+                <label class="layui-form-label">密码</label>
+                <div class="layui-input-inline">
+                    <input type="password" name="password" lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <!--端口号，加密方式-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">端口号</label>
+                <div class="layui-input-inline">
+                    <select name="port" lay-verify="required">
+                        <option value="">请选择端口号</option>
+                    </select>
+                </div>
+                <label class="layui-form-label">加密方式</label>
+                <div class="layui-input-inline">
+                    <select name="method" lay-verify="required">
+                        <option value="">请选择</option>
+                        <option value="table">table</option>
+                        <option value="rc4-md5">rc4-md5</option>
+                        <option value="salsa20">salsa20</option>
+                        <option value="chacha20">chacha20</option>
+                        <option value="aes-128-cfb">aes-128-cfb</option>
+                        <option value="aes-256-cfb">aes-256-cfb</option>
+                        <option value="aes-128-ctr">aes-128-ctr</option>
+                        <option value="aes-256-ctr">aes-256-ctr</option>
+                    </select>
+                </div>
+            </div>
+            <!--使用协议和混淆方式-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">协议</label>
+                <div class="layui-input-inline">
+                    <select name="protocol" lay-verify="required">
+                        <option value="">请选择协议</option>
+                        <option value="plain">plain</option>
+                        <option value="origin">origin</option>
+                        <option value="http_simple">http_simple</option>
+                        <option value="tls_simple">tls_simple</option>
+                    </select>
+                </div>
+                <label class="layui-form-label">混淆方式</label>
+                <div class="layui-input-inline">
+                    <select name="obfs" lay-verify="required">
+                        <option value="">请选择</option>
+                        <option value="plain">plain</option>
+                        <option value="origin">origin</option>
+                        <option value="http_simple">http_simple</option>
+                        <option value="tls_simple">tls_simple</option>
+                        <option value="verify_simple">verify_simple</option>
+                    </select>
+                </div>
+            </div>
+            <!--限流和流量总量-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">限速</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="limit" placeholder="请输入流量" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">KB为单位</div>
+            </div>
+            <!--流量总量-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">剩余</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="used" hidden="">
+                    <input type="text" name="remain" disabled="" placeholder="剩余M为单位" class="layui-input">
+                </div>
+                <label class="layui-form-label">总数</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="total" lay-verify="number" placeholder="总数M为单位" class="layui-input">
+                </div>
+            </div>
+            <!--开始时间和结束时间-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">开始时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="beginTm" class="layui-input" lay-verify="required" id="begin" placeholder="请选择日期" >
+                </div>
+                <label class="layui-form-label">结束时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="endTm" class="layui-input" lay-verify="required" id="end" placeholder="请选择日期" >
+                </div>
+            </div>
+            <!--提交表单-->
+            <div class="layui-form-item">
+                <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="saveOrUpdate">确定</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
+<script src="../res/layui/layui.js" charset="utf-8"></script>
+<script src="../res/utils.js" charset="utf-8"></script>
+<!--操作列-->
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">结束</a>
+</script>
+<!--表格数据js-->
+<script>
+    layui.use(['table','form', 'laydate'], function(){
+        var form = layui.form
+            ,layer = layui.layer
+            ,laydate = layui.laydate
+            ,table = layui.table
+            ,$ = layui.$;//定义jquery
+        /******************初始化操作********************/
+        //初始化port
+        initPortSelect($,form);
+        /******************初始化操作********************/
+
+        /******************表格操作********************/
+        var token = utl.getItem('token');//获取token
+        var begin=$("#qBegin").val(),end=$("#qEnd").val()
+        
+        //如果没有输入指定时间久查询所有
+        if(!begin||!end){
+            begin = '2018-01-01';
+            end = '2100-01-01';
+        }
+        //第一个实例
+        table.render({
+            elem: '#customerInfo'
+            ,url: '/query' //数据接口
+            ,method: 'post'
+            ,even: true//开启背景色
+            ,id: 'reload'
+            ,where:{token:token,begin:begin,end:end}//自定义提交参数
+            ,request:{page:1,limit:30}
+            ,page: true //开启分页
+            ,cols: [[ //表头
+                 {field: 'id',hidden:true}
+                ,{field: 'userId',hidden:true}
+                ,{field: 'userName', title: '用户名', width:80, fixed: 'left'}
+                ,{field: 'password', title: '密码', width:80}
+                ,{field: 'port', title: '端口', width:80, sort: true}
+                ,{field: 'method', title: '加密方式', width: 150}
+                ,{field: 'protocol', title: '协议', width: 150, sort: true}
+                ,{field: 'obfs', title: '混淆方式', width: 150}
+                ,{field: 'limit', title: '限流', width: 80, sort: true}
+                ,{field: 'remain', title: '剩余流量(M)', width: 120, sort: true}
+                ,{field: 'total', title: '总流量(M)', width: 120, sort: true}
+                ,{field: 'beginTm', title: '开始时间', width: 150, sort: true, templet:'<div>{{ utl.formatDate(d.beginTm)}}</div>'}
+                ,{field: 'endTm', title: '结束时间', width: 150, sort: true,templet:'<div>{{ utl.formatDate(d.endTm)}}</div>'}
+                ,{fixed: 'right', width:120, align:'center', toolbar: '#barDemo'} //这里的toolbar值是模板元素的选择器
+            ]]
+            ,done:function(res, curr, count_){
+                //判断是否为3如果是3的话就定向到login
+                utl.auth(res.code)
+            }
+        });
+        //监听工具条
+        table.on('tool(customer)', function(obj){
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            if(layEvent === 'edit'){ //查看
+                //加载数据回显表单
+                utl.formLoad($('#saveOrUpdateForm'),data);
+                form.render();
+                layer.open({
+                    title:'修改'
+                    ,type: 1
+                    ,shadeClose: true
+                    ,area: ['58%', '480px']
+                    ,content: $('#id')
+                });
+            } else if(layEvent === 'delete'){ //删除
+                layer.confirm('结束该用户的使用时间？', function(index){
+                    data['token'] = token
+                    //向服务器发起请求删除这个数据
+                    $.post("/delete", data ,function(res){
+                        utl.auth(res.code)
+                        if (res.code == 0){
+                            reloadTable(table,begin,end)
+                        }
+                    });
+                    //关闭单签弹窗
+                    layer.close(index);
+                });
+            }
+        });
+        /******************表格操作********************/
+
+        /*******************表单操作*******************/
+        //监听提交
+        form.on('submit(saveOrUpdate)', function(data){
+            //每次请求都必须携带token
+            data.field['token'] = token;
+            //请求服务
+            $.post("/saveOrUpdate", data.field, function(res){
+                utl.auth(res.code);
+                if(res.code==0){
+                    //请求服务更新成功在去重新加载
+                    reloadTable(table,begin,end)
+                }
+                layer.alert(res.message,{title:'提示'})
+                return false;
+            });
+        });
+        /*******************表单操作*******************/
+
+        /*******************日期控件操作*******************/
+        //日期
+        laydate.render({
+            elem: '#begin'
+        });
+        laydate.render({
+            elem: '#end'
+        });
+        laydate.render({
+            elem: '#qBegin'
+        });
+        laydate.render({
+            elem: '#qEnd'
+        });
+        /*******************日期控件操作*******************/
+
+        /*******************绑定事件*******************/
+        $('#add,#query').on('click', function(){
+            form.render();
+            var type = $(this).data('type');
+            clickAction[type] ? clickAction[type].call(this) : '';
+        });
+        /*******************绑定事件*******************/
+
+        /*******************点击方法操作*******************/
+        var clickAction =  {
+            query:function(){
+                var begin = $("#qBegin").val();
+                var end = $("#qEnd").val();
+                //如果没有输入指定时间久查询所有
+                if(!begin||!end){
+                    begin = '2018-01-01';
+                    end = '2100-01-01';
+                }
+                reloadTable(table,begin,end);
+            },
+            add:function(){
+                initPortSelect($,form)
+                utl.formClear($('#saveOrUpdateForm'));
+                layer.open({
+                    title:'添加'
+                    ,type: 1
+                    ,shadeClose: true
+                    ,area: ['58%', '480px']
+                    ,content: $('#id')
+                });
+            }
+        }
+        /*******************点击方法操作*******************/
+    });
+    //重新加载表格
+    function reloadTable(table,begin,end){
+        var token = utl.getItem('token')
+        if(!begin||!end){
+            return;
+        }
+        //执行重载
+        table.reload('reload', {
+            page: {
+                curr: 1 //重新从第 1 页开始
+            },where: {
+                token:token,begin:begin,end:end
+            }
+        });
+    }
+    //初始化端口下拉选择
+    function initPortSelect($,form){
+        $.post('/getPort',{token:utl.getItem('token')},function(res){
+            utl.auth(res.code);
+            //获取select
+            var select = $("select[name='port']");
+            var port = res.data;
+            var html = "<option value=''>请选择</option>";
+            for(var i=9900;i<=9999;i++){
+                var flag = false;
+                //将已经存在的不让选择
+                for(var y=0;y<port.length;y++){
+                    if(i==port[y]){
+                        flag=true
+                    }
+                }
+                if (flag){
+                    html += "<option value='"+i+"' disabled >"+i+"</option>";
+                }else{
+                    html += "<option value='"+i+"'>"+i+"</option>";
+                }
+            }
+            select.html(html);
+        })
+        form.render()
+    }
+</script>
