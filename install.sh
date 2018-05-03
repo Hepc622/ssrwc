@@ -50,9 +50,9 @@ if [[ ${OS} == Ubuntu || ${OS} == Debian ]];then
 #     chmod +x /etc/init.d/ssr
 #     cd /etc/init.d
     # `dirname $0` 得到当前目录的父级目录
-    parent=`dirname $0`
+    # parent=`dirname $0`
     # 切换到目录
-    cd $parent/shadowsocks/
+    cd /usr/local/ssr/shadowsocks/
     # 建立一个硬连接
     ln ./ssr /etc/init.d/
     # 修改权限
@@ -61,10 +61,8 @@ if [[ ${OS} == Ubuntu || ${OS} == Debian ]];then
 fi
 
 if [[ ${OS} == CentOS ]];then
-   # `dirname $0` 得到当前目录的父级目录
-   parent=`dirname $0`
    # 切换到目录
-   cd $parent/shadowsocks/
+   cd /usr/local/ssr/shadowsocks/
    # 建立一个硬连接
    ln ./ssr /etc/init.d/
    # 修改权限
@@ -121,7 +119,7 @@ pip install pyjwt
 #Install serverSpeeder
 # 判断是否为3.10.0的内核
 cd /root
-if [ -z "$(uname -a|grep '3.10.0')" ];then
+if [ -z "$(uname -a|grep '3.10.0-229.1.2.el7.x86_64')" ];then
     # 不是3.10.0的内核，更换内核
     rpm -ivh http://soft.91yun.org/ISO/Linux/CentOS/kernel/kernel-3.10.0-229.1.2.el7.x86_64.rpm --force
 fi
