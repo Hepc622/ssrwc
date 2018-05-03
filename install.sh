@@ -105,8 +105,7 @@ fi
 cd /usr/local/ssr/shadowsocks
 # 创建硬链接,同步实时更新的
 if [ -z $(find /usr/local/ssr/bak/ -name config.json) ];then
-    tmp=date -d @1438617600  "+%Y-%m-%d"
-    mv /usr/local/ssr/bak/config.json /usr/local/ssr/bak/config.json.${tmp}.bak
+    mv /usr/local/ssr/bak/config.json /usr/local/ssr/bak/config.json.bak
 fi
 ln ./config.json /usr/local/ssr/bak/
 # 安装依赖
