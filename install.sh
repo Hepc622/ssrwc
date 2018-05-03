@@ -1,61 +1,10 @@
 #!/bin/bash
 export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-#Check Root
-[ $(id -u) != "0" ] && { echo "Error: You must be root to run this script"; exit 1; }
-#Check OS
-if [ -n "$(grep 'Aliyun Linux release' /etc/issue)" -o -e /etc/redhat-release ];then
-    OS=CentOS
-    [ -n "$(grep ' 7\.' /etc/redhat-release)" ] && CentOS_RHEL_version=7
-    [ -n "$(grep ' 6\.' /etc/redhat-release)" -o -n "$(grep 'Aliyun Linux release6 15' /etc/issue)" ] && CentOS_RHEL_version=6
-    [ -n "$(grep ' 5\.' /etc/redhat-release)" -o -n "$(grep 'Aliyun Linux release5' /etc/issue)" ] && CentOS_RHEL_version=5
-elif [ -n "$(grep 'Amazon Linux AMI release' /etc/issue)" -o -e /etc/system-release ];then
-    OS=CentOS
-    CentOS_RHEL_version=6
-elif [ -n "$(grep bian /etc/issue)" -o "$(lsb_release -is 2>/dev/null)" == 'Debian' ];then
-    OS=Debian
-    [ ! -e "$(which lsb_release)" ] && { apt-get -y update; apt-get -y install lsb-release; clear; }
-    Debian_version=$(lsb_release -sr | awk -F. '{print $1}')
-elif [ -n "$(grep Deepin /etc/issue)" -o "$(lsb_release -is 2>/dev/null)" == 'Deepin' ];then
-    OS=Debian
-    [ ! -e "$(which lsb_release)" ] && { apt-get -y update; apt-get -y install lsb-release; clear; }
-    Debian_version=$(lsb_release -sr | awk -F. '{print $1}')
-elif [ -n "$(grep Ubuntu /etc/issue)" -o "$(lsb_release -is 2>/dev/null)" == 'Ubuntu' -o -n "$(grep 'Linux Mint' /etc/issue)" ];then
-    OS=Ubuntu
-    [ ! -e "$(which lsb_release)" ] && { apt-get -y update; apt-get -y install lsb-release; clear; }
-    Ubuntu_version=$(lsb_release -sr | awk -F. '{print $1}')
-    [ -n "$(grep 'Linux Mint 18' /etc/issue)" ] && Ubuntu_version=16
-else
-    echo "Does not support this OS, Please contact the author! "
-    kill -9 $$
-fi
 
 #chmod
 chmod -R 755 *
 #Get Current Directory
 workdir=$(pwd)
-
-#Install Basic Tools
-if [[ ${OS} == Ubuntu ]];then
-	apt-get update
-	apt-get install python -y
-	apt-get install python-pip -y
-	apt-get install git unzip wget -y
-	apt-get install language-pack-zh-hans -y
-    apt-get install build-essential screen curl -y
-fi
-if [[ ${OS} == CentOS ]];then
-	yum install python screen curl -y
-	yum install python-setuptools -y && easy_install pip -y
-	yum install git unzip wget-y
-    yum groupinstall "Development Tools" -y
-fi
-if [[ ${OS} == Debian ]];then
-	apt-get update
-	apt-get install python screen curl -y
-	apt-get install python-pip -y
-	apt-get install git unzip wget -y
-    apt-get install build-essential -y
-fi
 
 #Install SSR WC
 # 创建一个ssr的目录
@@ -174,10 +123,15 @@ pip install pyjwt
 cd /root
 if [ -z "$(uname -a|grep '3.10.0')" ];then
     # 不是3.10.0的内核，更换内核
-    wget -N --no-check-certificate https://freed.ga/kernel/ruisu.sh && bash ruisu.sh
+    rpm -ivh http://soft.91yun.org/ISO/Linux/CentOS/kernel/kernel-3.10.0-229.1.2.el7.x86_64.rpm --force
 fi
+echo "将系统跟换至3.10.0-229，请在重启后运行serverspeeder-all.sh这个脚本,进行安装锐速加速"
 # 安装锐速
-# wget -N --no-check-certificate https://github.com/91yun/serverspeeder/raw/master/serverspeeder.sh && bash serverspeeder.sh
 wget -N --no-check-certificate https://raw.githubusercontent.com/91yun/serverspeeder/master/serverspeeder-all.sh && bash serverspeeder-all.sh
 # 启动ssr
 service ssr start
+echo "可以使用service ssr (start|stop|restart) 来操作ssrwc"
+echo "直接使用ip地址访问web控制"
+echo "欢迎纠正错误，git地址：https://github.com/Hepc622/ssrwc.git"
+echo "欢迎使用..."
+echo "修改者：墨荷"
