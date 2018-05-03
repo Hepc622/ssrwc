@@ -36,7 +36,7 @@ if __name__ == '__main__':
     # debug模式
     # app.debug=True 或者app.run(debug=True)
     # port参数指定启动端口(可改为任意商品),host参数指主机ip
-    app.run(host='localhost', port=80)
+    app.run(host='0.0.0.0', port=80)
     # 导入webbrowser用于调用系统默认浏览器访问指定url
     # import webbrowser
     # webbrowser.open("http://localhost/index")
