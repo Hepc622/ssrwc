@@ -6,6 +6,7 @@ import os
 import logging
 import platform
 import re
+from datetime import datetime
 
 
 # 查找json文件
@@ -36,7 +37,7 @@ def get_dict(_type=0):
             if _type == 0:
                 return load_dict
             else:
-                return load_dict.get("port_password")
+                return load_dict.get("port_password", {})
     elif regex2.match(platform.python_version()) is not None:
         # 2.7
         # 读取文件
@@ -46,7 +47,7 @@ def get_dict(_type=0):
             if _type == 0:
                 return load_dict
             else:
-                return load_dict.get("port_password")
+                return load_dict.get("port_password", {})
     return {}
 
 # 将一个字典对象写入到文件中
@@ -55,7 +56,39 @@ def write_file(dic=None):
     path = find_config_path()
     if dic is None:
         raise Exception("写入的字典参数不能为空！")
-    with open(file=path,mode='w',encoding='utf-8') as f:
-        json.dump(dic,f)
-if __name__ == '__main__':
-    print(get_dict())
+    regex3 = re.compile("3.[0-9].[0-9]")
+    regex2 = re.compile("2.[0-9].[0-9]")
+    if regex3.match(platform.python_version()) is not None:
+        with open(file=path,mode='w',encoding='utf-8') as f:
+            json.dump(dic,f)
+    elif regex2.match(platform.python_version()) is not None:
+        with open(name=path, mode='w') as f:
+            json.dump(dic,f)
+    
+# 写入备份文件中
+def write_file_to_bak(dic):
+    # 获取bak的路径
+    bak = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))))
+    # 生成文件路劲及名字
+    path = os.path.join(bak, 'bak', 'delConfig.json')
+    regex3 = re.compile("3.[0-9].[0-9]")
+    regex2 = re.compile("2.[0-9].[0-9]")
+    read_file = None
+    if regex3.match(platform.python_version()) is not None:
+        read_file = open(file=path,mode='r',encoding='utf-8')
+           
+    elif regex2.match(platform.python_version()) is not None:
+        read_file = open(name=path,mode='r')
+    load_dict = json.load(read_file)
+    
+    write_file = None
+    if regex3.match(platform.python_version()) is not None:
+        write_file = open(file=path,mode='w',encoding='utf-8')
+           
+    elif regex2.match(platform.python_version()) is not None:
+        write_file = open(name=path, mode='w')
+    # 以日期为key保存被删除的数据
+    date = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
+    load_dict[date] = dic
+    # 写入文件
+    json.dump(load_dict,write_file)

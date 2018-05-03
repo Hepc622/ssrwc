@@ -52,7 +52,7 @@ if [[ ${OS} == Debian ]];then
     apt-get install build-essential -y
 fi
 # 下载ssrwc项目
-wget https://github.com/Hepc622/ssrwc/archive/master.zip -O /opt/ssrwc.zip	
+wget https://github.com/Hepc622/ssrwc/archive/master.zip -O /opt/ssrwc.zip
 # 切入到opt
 cd /opt/
 # 解压项目

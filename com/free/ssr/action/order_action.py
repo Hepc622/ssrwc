@@ -28,7 +28,8 @@ def query():
     limit = request.form['limit']
     begin = int(page) * int(limit) - int(limit)
     end = int(page) * int(limit)
-    count = len(port_service.get_valid_ports())
+    count = len(port_service.get_all_port().items())
+    print(count)
     # 获取出所有的数据
     order = port_service.query_valid_port_info(begin_tm, end_tm, begin, end)
     return Result(data=order, count=count).get_json()
@@ -41,11 +42,19 @@ def saveOrUpdate():
     return Result(code=0, message='修改成功').get_json()
 
 
-# 删除指定的订单
-@sa.route("/delete", methods=["POST"])
-def delete():
-    port_service.delete_port_info(request.form)
-    return Result(code=0, message='修改成功').get_json()
+# 指定的数据过期
+@sa.route("/overdue", methods=["POST"])
+def overdue():
+    port_service.overdue_port_info(request.form)
+    return Result(code=0, message='这个数据已过期').get_json()
+
+
+# 指定的数据过期
+@sa.route("/destroy", methods=["POST"])
+def destroy():
+    port_service.destroy_port_info(request.form)
+    return Result(code=0, message='销毁成功').get_json()
+
 
 # 处理表单数据
 def deal_form():

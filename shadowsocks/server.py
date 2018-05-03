@@ -138,7 +138,7 @@ def main():
             }
             """
             # 如果是1的话表示无效的状态0表示正常
-            if password_obfs.get("mark",0) == 1:
+            if password_obfs.get("flowMark",0) == 1 or password_obfs.get("dateMark",0) == 1:
                 continue
             # 密码
             password = password_obfs.get('password', 'm')

@@ -10,21 +10,13 @@ from com.free.ssr.action.linux_option import Linux
 # 每天0点检查该服务器的所有端口的有效期，如果过期了，需要将这个端口给墙了
 def validate_dealine(self):
     # 获取已经过期的port
+    port_service.check_port_date()
     overdue = port_service.get_overdue_ports()
     # 先查一下这些端口是否在开放，如果开发就将他关闭
     if Linux.check_ports_open(overdue):
         logging.info("过期的端口有 %s" %(overdue,))
         # 将这些端口墙了
         Linux.delete_port(overdue)
-        # 将json配置文件获取成字典对象
-        ssrj = jfileutl.get_dict()
-        # 修改配置文件
-        for port in overdue:
-            # 将端口至为无效
-            del ssrj['port_password'][port]
-            # 将他写入一个历史的记录中去
-        # 将改的数据写入到文件中
-        jfileutl.write_file(ssrj)
         # 重启ssr
         Linux.restart_ssr()
 
@@ -42,9 +34,9 @@ def count_flow():
         # 获取出对应的端口数据
         port_data = port_info.get(port)
         # 获取出该端口是否有效,有效才去更改数据
-        mark = port_data.get("mark")
+        flowMark = port_data.get("flowMark")
         # 只更改有效的端口
-        if int(mark) == 0:
+        if int(flowMark) == 0:
             # 获取最大数
             total = int(port_data.get("total"))
             # 计算出剩余的流量
@@ -53,10 +45,10 @@ def count_flow():
             port_data['remain'] = 0 if remain <= 0 else remain
             # 设置用的流量
             port_data['used'] = int(port_data.get("used"))+flow
-            # 判断剩余的流量是否小于0,是的话需要将该端口的mark至为1
+            # 判断剩余的流量是否小于0,是的话需要将该端口的flowMark至为1
             if remain <= 0:
                 # 将标志至为无效
-                port_data['mark'] = 1
+                port_data['flowMark'] = 1
                 # 这里不能把端口给墙了只能去重启一下ssr让他重新读取一下配置文件，因为只是流量超出了，而不是过期了
                 reboot_ssr = True
 
@@ -71,13 +63,13 @@ def count_flow():
 def clear_port_flow():
     # 获取有效的端口
     valid_port = port_service.get_valid_ports()
-    # 将他们的端口号至为mark都至为0
+    # 将他们的端口号至为flowMark都至为0
     # 取出配置文件,且获取出要操作的那些数据 
     ssrj = jfileutl.get_dict()
     port_info = ssrj.get('port_password')
     for port in valid_port:
         port_data = port_info.get(port)
-        port_data["mark"] = 0
+        port_data["flowMark"] = 0
         # 将他们的流量都清空
         port_data["used"] = 0
         port_data["remain"] = port_data["total"]

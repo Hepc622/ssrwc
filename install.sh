@@ -104,10 +104,11 @@ fi
 # 将config文件硬链接一个到ssr下
 cd /usr/local/ssr/shadowsocks
 # 创建硬链接,同步实时更新的
-if [ -z $(find ../ -name config.json) ];then
-    mv ../config.json ../config.json.bak
+if [ -z $(find /usr/local/ssr/bak/ -name config.json) ];then
+    tmp=date -d @1438617600  "+%Y-%m-%d"
+    mv /usr/local/ssr/bak/config.json /usr/local/ssr/bak/config.json.${tmp}.bak
 fi
-ln ./config.json ../
+ln ./config.json /usr/local/ssr/bak/
 # 安装依赖
 # python开发环境依赖
 yum install python-devel 

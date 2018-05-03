@@ -53,5 +53,14 @@ var utl = {
             return "";
         }
 
+    },
+    formatMark:function(val){
+        if(val == '1'){
+            return '否'
+        }else if(val == '0'){
+            return '是'
+        }else{
+            return '否'
+        }
     }
 }

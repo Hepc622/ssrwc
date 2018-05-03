@@ -108,7 +108,6 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">剩余</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="used" hidden="">
                     <input type="text" name="remain" disabled="" placeholder="剩余M为单位" class="layui-input">
                 </div>
                 <label class="layui-form-label">总数</label>
@@ -140,7 +139,8 @@
 <!--操作列-->
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">结束</a>
+    <a class="layui-btn layui-btn-xs" lay-event="overdue">过期</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="destroy">销毁</a>
 </script>
 <!--表格数据js-->
 <script>
@@ -179,6 +179,8 @@
                 ,{field: 'userId',hidden:true}
                 ,{field: 'userName', title: '用户名', width:80, fixed: 'left'}
                 ,{field: 'password', title: '密码', width:80}
+                ,{field: 'flowMark', title: '是否有流量', width:80,templet:'<div>{{ utl.formatMark(d.flowMark)}}</div>'}
+                ,{field: 'dateMark', title: '是否过期', width:80,templet:'<div>{{ utl.formatMark(d.dateMark)}}</div>'}
                 ,{field: 'port', title: '端口', width:80, sort: true}
                 ,{field: 'method', title: '加密方式', width: 150}
                 ,{field: 'protocol', title: '协议', width: 150, sort: true}
@@ -188,7 +190,7 @@
                 ,{field: 'total', title: '总流量(M)', width: 120, sort: true}
                 ,{field: 'beginTm', title: '开始时间', width: 150, sort: true, templet:'<div>{{ utl.formatDate(d.beginTm)}}</div>'}
                 ,{field: 'endTm', title: '结束时间', width: 150, sort: true,templet:'<div>{{ utl.formatDate(d.endTm)}}</div>'}
-                ,{fixed: 'right', width:120, align:'center', toolbar: '#barDemo'} //这里的toolbar值是模板元素的选择器
+                ,{fixed: 'right', width:160, align:'center', toolbar: '#barDemo'} //这里的toolbar值是模板元素的选择器
             ]]
             ,done:function(res, curr, count_){
                 //判断是否为3如果是3的话就定向到login
@@ -210,11 +212,24 @@
                     ,area: ['58%', '480px']
                     ,content: $('#id')
                 });
-            } else if(layEvent === 'delete'){ //删除
+            } else if(layEvent === 'overdue'){ //删除
                 layer.confirm('结束该用户的使用时间？', function(index){
                     data['token'] = token
                     //向服务器发起请求删除这个数据
-                    $.post("/delete", data ,function(res){
+                    $.post("/overdue", data ,function(res){
+                        utl.auth(res.code)
+                        if (res.code == 0){
+                            reloadTable(table,begin,end)
+                        }
+                    });
+                    //关闭单签弹窗
+                    layer.close(index);
+                });
+            }else if(layEvent === 'destroy'){ //删除
+                layer.confirm('确定删除这个用户？', function(index){
+                    data['token'] = token
+                    //向服务器发起请求删除这个数据
+                    $.post("/destroy", data ,function(res){
                         utl.auth(res.code)
                         if (res.code == 0){
                             reloadTable(table,begin,end)
