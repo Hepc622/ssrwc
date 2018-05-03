@@ -1,5 +1,5 @@
 #!/usr/bin/ python
-#vim: set fileencoding:utf-8
+# -*- coding: utf-8 -*-
 
 import threading
 import datetime
@@ -7,7 +7,6 @@ import logging
 import time
 
 import com.free.ssr.action.jobs as _jobs
-
 
 # 定时任务
 class Job(object):

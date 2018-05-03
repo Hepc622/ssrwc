@@ -143,7 +143,6 @@ if [[ ${OS} == CentOS && $CentOS_RHEL_version == 7 ]];then
 -A INPUT -p icmp -j ACCEPT
 -A INPUT -i lo -j ACCEPT
 -A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT
--A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 3306 -j ACCEPT
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 443 -j ACCEPT
 -A INPUT -j REJECT --reject-with icmp-host-prohibited
@@ -172,6 +171,7 @@ pip install pyjwt
 
 #Install serverSpeeder
 # 判断是否为3.10.0的内核
+cd /root
 if [ -z "$(uname -a|grep '3.10.0')" ];then
     # 不是3.10.0的内核，更换内核
     wget -N --no-check-certificate https://freed.ga/kernel/ruisu.sh && bash ruisu.sh

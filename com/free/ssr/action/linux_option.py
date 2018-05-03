@@ -1,8 +1,9 @@
 #!/usr/bin/ python
-#vim: set fileencoding:utf-8
+# -*- coding: utf-8 -*-
 
 import os
 import logging
+
 class Linux:
 
 	# 给防火墙添加一个或多个放行端口
@@ -141,8 +142,8 @@ class Linux:
 	# 重启防火墙
 	@staticmethod
 	def save_rules():
-		command = "iptables-save > /etc/iptables.up.rules && service iptables save"
-		logging.info("保存防火墙信息，将它写入到/etc/iptables.up.rules文件中")
+		command = "service iptables save"
+		logging.info("保存防火墙信息，将它写入到/etc/sysconfig/iptables文件中")
 		return Linux.ckcomsuccess(os.popen(command).readlines(), command)
 
 	# 检查命令是否执行成功（那种执行之后没有任何返回数据的命令）

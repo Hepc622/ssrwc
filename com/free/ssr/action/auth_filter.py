@@ -1,5 +1,5 @@
 #!/usr/bin/ python
-#vim: set fileencoding:utf-8
+# -*- coding: utf-8 -*-
 
 import com.free.ssr.utils.token_utils as utils_token
 import logging

@@ -1,9 +1,10 @@
 #!/usr/bin/ python
-#vim: set fileencoding:utf-8
+# -*- coding: utf-8 -*-
 
 import re
 import traceback
 import pymysql
+import sys
 
 
 # 链接对象

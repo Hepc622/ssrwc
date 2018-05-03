@@ -1,5 +1,5 @@
 #!/usr/bin/ python
-# vim: set fileencoding:utf-8
+# -*- coding: utf-8 -*-
 
 import hashlib
 
@@ -7,6 +7,7 @@ import com.free.ssr.utils.token_utils as token_utils
 from flask import request, redirect, Blueprint
 from com.free.ssr.vo.result import Result
 import logging
+
 
 sl = Blueprint('sl', __name__)
 

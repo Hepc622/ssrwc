@@ -1,12 +1,16 @@
 #!/usr/bin/ python
-#vim: set fileencoding:utf-8
+# -*- coding: utf-8 -*-
 
 import json
 import os
+import logging
+import platform
+import re
+
 
 # 查找json文件
 def find_config_path():
-    project = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
+    project = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))))
     # 获取当前的工作目录
     config_path = os.path.join(project, 'shadowsocks', 'config.json')
     if os.path.exists(config_path):
@@ -18,15 +22,32 @@ def find_config_path():
 def get_dict(_type=0):
     # 如果path为空的话就获取默认的路径
     path = find_config_path()
-    # 读取文件
-    with open(file=path, mode='r', encoding='utf-8') as f:
-        # 将文件内容读成字典
-        load_dict = json.load(f)
-        if _type is 0:
-            return load_dict
-        else:
-            return load_dict.get("port_password")
-    return None
+    if path is None:
+        logging.info("文件路径没找到！")
+        return {}
+    regex3 = re.compile("3.[0-9].[0-9]")
+    regex2 = re.compile("2.[0-9].[0-9]")
+    if regex3.match(platform.python_version()) is not None:
+        # 3.6
+        # 读取文件
+        with open(file=path, mode='r', encoding='utf-8') as f:
+            # 将文件内容读成字典
+            load_dict = json.load(f)
+            if _type == 0:
+                return load_dict
+            else:
+                return load_dict.get("port_password")
+    elif regex2.match(platform.python_version()) is not None:
+        # 2.7
+        # 读取文件
+        with open(name=path, mode='r') as f:
+            # 将文件内容读成字典
+            load_dict = json.load(f)
+            if _type == 0:
+                return load_dict
+            else:
+                return load_dict.get("port_password")
+    return {}
 
 # 将一个字典对象写入到文件中
 def write_file(dic=None):
@@ -36,3 +57,5 @@ def write_file(dic=None):
         raise Exception("写入的字典参数不能为空！")
     with open(file=path,mode='w',encoding='utf-8') as f:
         json.dump(dic,f)
+if __name__ == '__main__':
+    print(get_dict())

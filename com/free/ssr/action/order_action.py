@@ -1,5 +1,5 @@
 #!/usr/bin/ python
-#vim: set fileencoding:utf-8
+# -*- coding: utf-8 -*-
 
 import uuid
 
@@ -7,6 +7,7 @@ from flask import request, Blueprint
 
 import com.free.ssr.action.port_service as port_service
 from com.free.ssr.vo.result import Result
+
 
 sa = Blueprint('sa', __name__)
 

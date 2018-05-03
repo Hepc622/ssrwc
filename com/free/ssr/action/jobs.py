@@ -1,5 +1,5 @@
 #!/usr/bin/ python
-#vim: set fileencoding:utf-8
+# -*- coding: utf-8 -*-
 
 import com.free.ssr.action.port_service as port_service
 import com.free.ssr.utils.json_file_utils as jfileutl

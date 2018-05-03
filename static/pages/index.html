@@ -65,7 +65,9 @@
         // 当内容加载完
         $(function(){
             var data = utl.getItem('user');
-            console.log(data)
+            if (data == null || data == "" || data == undefined){
+                utl.auth(3)
+            }
             //设置头像和名称
             $("#username").html(data['userName']);
             $("#head").attr("src",data['headUrl']);

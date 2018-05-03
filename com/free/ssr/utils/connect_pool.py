@@ -1,5 +1,5 @@
 #!/usr/bin/ python
-#vim: set fileencoding:utf-8
+# -*- coding: utf-8 -*-
 
 import os
 import pymysql
@@ -8,7 +8,6 @@ import time
 import traceback
 import yaml
 from com.free.ssr.utils.connect import Connect
-
 
 # 链接池
 class ConnectPool(object):

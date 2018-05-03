@@ -1,10 +1,11 @@
 #!/usr/bin/ python
-#vim: set fileencoding:utf-8
+# -*- coding: utf-8 -*-
 
 from com.free.ssr.action.linux_option import Linux
 import com.free.ssr.utils.json_file_utils as jfileutl
 import logging
 from datetime import datetime
+
 
 # 获取有效的端口,也就是mark为0的
 def get_valid_ports():
