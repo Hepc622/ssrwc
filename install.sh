@@ -169,7 +169,7 @@ pip install pyjwt
 #Install serverSpeeder
 # 判断是否为3.10.0的内核
 cd /root
-if [ -z "$(uname -a|grep '3.10.0-229.1.2.el7.x86_64')" ];then
+if [ -z $(uname -a|grep '3.10.0-229.1.2.el7.x86_64') ];then
     # 不是3.10.0的内核，更换内核
     rpm -ivh http://soft.91yun.org/ISO/Linux/CentOS/kernel/kernel-3.10.0-229.1.2.el7.x86_64.rpm --force
 fi
