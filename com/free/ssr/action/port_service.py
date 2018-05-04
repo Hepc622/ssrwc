@@ -48,7 +48,7 @@ def save_update_port_info(dic=None):
         else:
             add_port_info(dic, load_dict)
     else:
-        logging.info("dic 参数不能为空")
+        logging.info("The dic that can`t be null")
 
 # 修改数据
 def update_port_info(dic=None, load_dict=None):
@@ -118,7 +118,7 @@ def update_port_info(dic=None, load_dict=None):
     if int(port) != int(old_port):
         # 更新端口墙规则
         if Linux.update_port(old_port,port):
-            logging.info("更新端口墙规则，原端口：%s,现端口：%s" %(old_port,port))
+            logging.info("Update a rule of port，The origin：%s,The new：%s" %(old_port,port))
     # 更新到文件中去
     jfileutl.write_file(load_dict)
     # 重启ssr
@@ -190,7 +190,7 @@ def add_port_info(dic=None, load_dict=None):
     port_password[port] = option_data
     # 判断端口是否改变
     if Linux.add_port([port]):
-        logging.info("添加端口规则:%s" %(port))
+        logging.info("Insert a rule of port:%s" %(port))
 
     # 更新到文件中去
     jfileutl.write_file(load_dict)
@@ -219,7 +219,7 @@ def overdue_port_info(dic=None):
         # 重启ssr
         Linux.restart_ssr()
     else:
-        logging.info("参数不能为空")
+        logging.info("The agr can`t be null")
 
 # 真实的从config中移除
 def destroy_port_info(dic=None):
@@ -242,7 +242,7 @@ def destroy_port_info(dic=None):
         # 重启ssr
         Linux.restart_ssr()
     else:
-        logging.info("参数不能为空")
+        logging.info("The agr can`t be null")
 
 # 获取指定的端口
 def query_valid_port_info(beginTm, endTm, begin, end):

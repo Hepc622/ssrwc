@@ -24,7 +24,7 @@ def get_dict(_type=0):
     # 如果path为空的话就获取默认的路径
     path = find_config_path()
     if path is None:
-        logging.info("文件路径没找到！")
+        logging.info("The file not find")
         return {}
     regex3 = re.compile("3.[0-9].[0-9]")
     regex2 = re.compile("2.[0-9].[0-9]")
@@ -55,7 +55,7 @@ def write_file(dic=None):
     # 如果path为空的话就获取默认的路径
     path = find_config_path()
     if dic is None:
-        raise Exception("写入的字典参数不能为空！")
+        raise Exception("The data that is written can`t be empty")
     regex3 = re.compile("3.[0-9].[0-9]")
     regex2 = re.compile("2.[0-9].[0-9]")
     if regex3.match(platform.python_version()) is not None:
