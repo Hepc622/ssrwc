@@ -1,9 +1,9 @@
-#!/usr/bin/ python
+#!/usr/bin/python
 # coding: utf-8
 
 import com.free.ssr.action.port_service as port_service
 import com.free.ssr.utils.json_file_utils as jfileutl
-import logging
+
 from com.free.ssr.action.linux_option import Linux
 
 
@@ -14,7 +14,7 @@ def validate_dealine(self):
     overdue = port_service.get_overdue_ports()
     # 先查一下这些端口是否在开放,如果开发就将他关闭
     if Linux.check_ports_open(overdue):
-        logging.info("The overdue ports %s" %(overdue,))
+        print("The overdue ports %s" %(overdue,))
         # 将这些端口墙了
         Linux.delete_port(overdue)
         # 重启ssr
@@ -54,7 +54,7 @@ def count_flow():
 
 	# 判断是否需要重启ssr
     if reboot_ssr:
-        logging.info("have some customer flow out of the total,need restart the ssr software,The user info：%s" % (ssrj,))
+        print("have some customer flow out of the total,need restart the ssr software,The user info：%s" % (ssrj,))
         jfileutl.write_file(ssrj)
         # 重启ssr
         Linux.restart_ssr()
@@ -73,7 +73,7 @@ def clear_port_flow():
         # 将他们的流量都清空
         port_data["used"] = 0
         port_data["remain"] = port_data["total"]
-    logging.info("The 1st of every month clear the flows,clear after the data：" % (ssrj,))
+    print("The 1st of every month clear the flows,clear after the data：" % (ssrj,))
     # 写到文件里去
     jfileutl.write_file(ssrj)
     # 将OUTPUT表中的数据流量全部清空
@@ -94,7 +94,7 @@ def clear_port_flow():
 def check_serverSpeeder_is_run():
     # 检查是否开启了加速
     if not Linux.serverSpeeder_is_run():
-        logging.info("The serverSpeeder did`t runing,starting the serverSpeeder...")
+        print("The serverSpeeder did`t runing,starting the serverSpeeder...")
         # 启动加速
         Linux.start_serverSpeeder()
         

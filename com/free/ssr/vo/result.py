@@ -1,4 +1,4 @@
-#!/usr/bin/ python
+#!/usr/bin/python
 # coding: utf-8
 
 
@@ -15,7 +15,7 @@ class Result(object):
     # 统计
     count = 0
 
-    def __init__(self, code=0, message="请求成功！",count = 0, data={}):
+    def __init__(self, code=0, message="请求成功!",count = 0, data={}):
         self.code = code
         self.message = message
         self.data = data

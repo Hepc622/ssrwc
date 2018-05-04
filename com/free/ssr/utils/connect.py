@@ -1,11 +1,11 @@
-#!/usr/bin/ python
+#!/usr/bin/python
 # coding: utf-8
 
 import re
 import traceback
 import pymysql
 import sys
-import logging
+
 
 
 # 链接对象
@@ -34,7 +34,7 @@ class Connect(object):
     # 关闭连接,设置为空闲状态
     def close(self):
         self.__free = True
-        # logging.info("当前线程", threading.current_thread().name, "这个链接空闲了：", self.__connect)
+        # print("当前线程", threading.current_thread().name, "这个链接空闲了：", self.__connect)
 
     # 处理sql
     def deal_sql(self, sql, params):
@@ -66,7 +66,7 @@ class Connect(object):
     # 查询所有
     def select_all(self, sql, *params):
         sql = self.deal_sql(sql, params)
-        logging.info(sql)
+        print(sql)
         try:
             # 获取当前游标的位置
             cursor = self.__connect.cursor(cursor=pymysql.cursors.DictCursor)

@@ -1,4 +1,4 @@
-#!/usr/bin/ python
+#!/usr/bin/python
 # coding: utf-8
 
 import os
@@ -7,7 +7,7 @@ import threading
 import time
 import traceback
 import yaml
-import logging
+
 from com.free.ssr.utils.connect import Connect
 
 # 链接池
@@ -108,7 +108,7 @@ class ConnectPool(object):
             traceback.print_exception()
             # 打印执行过程
             traceback.print_exc()
-        logging.info("连接池初始化完成")
+        print("连接池初始化完成")
 
     # 获取链接
     def get_connect(self):
@@ -161,7 +161,7 @@ class ConnectPool(object):
         for con in self.__connects:
             if con.get_free():
                 count += 1
-        logging.info("当前线程", threading.current_thread().name,
+        print("当前线程", threading.current_thread().name,
               str+": ", connect,
               "当前连接池数总数: ", len(self.__connects),
               "正在使用的链接数： ", (len(self.__connects)-count),

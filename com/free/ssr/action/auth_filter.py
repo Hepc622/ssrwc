@@ -1,8 +1,8 @@
-#!/usr/bin/ python
+#!/usr/bin/python
 # coding: utf-8
 
 import com.free.ssr.utils.token_utils as utils_token
-import logging
+
 from flask import request
 from com.free.ssr.vo.result import Result
 
@@ -18,14 +18,14 @@ def auth_filter():
         # 验证权限
         if utils_token.valid_token(token) is not False:
             # 验证token是否有效
-            logging.info("validate the token,if it were valid,we pass the querst")
+            print("validate the token,if it were valid,we pass the querst")
             return
         else:
             url = request.url.split("?")[0]
             if url.find("/login") != -1:
                 return
             else:
-                return Result(code=3, message="请登录重新登录！").get_json()
+                return Result(code=3, message="请登录重新登录!").get_json()
 
 
 # 从请求中获取token,返回None标识不需要权限,可以直接放行,如果是非None就说明是要验证token的
