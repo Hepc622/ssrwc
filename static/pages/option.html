@@ -106,9 +106,10 @@
             </div>
             <!--流量总量-->
             <div class="layui-form-item">
-                <label class="layui-form-label">剩余</label>
+                <label class="layui-form-label">使用</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="remain" disabled="" placeholder="剩余M为单位" class="layui-input">
+                    <input type="text" name="remain" hidden="">
+                    <input type="text" name="used" disabled="" placeholder="M为单位" class="layui-input">
                 </div>
                 <label class="layui-form-label">总数</label>
                 <div class="layui-input-inline">
@@ -179,13 +180,14 @@
                 ,{field: 'userId',hidden:true}
                 ,{field: 'userName', title: '用户名', width:80, fixed: 'left'}
                 ,{field: 'password', title: '密码', width:80}
-                ,{field: 'flowMark', title: '是否有流量', width:80,templet:'<div>{{ utl.formatMark(d.flowMark)}}</div>'}
-                ,{field: 'dateMark', title: '是否过期', width:80,templet:'<div>{{ utl.formatMark(d.dateMark)}}</div>'}
+                ,{field: 'flowMark', title: '是否有流量', width:120,templet:'<div>{{ utl.formatMark(d.flowMark)}}</div>'}
+                ,{field: 'dateMark', title: '是否过期', width:120,templet:'<div>{{ utl.formatMark(d.dateMark)}}</div>'}
                 ,{field: 'port', title: '端口', width:80, sort: true}
                 ,{field: 'method', title: '加密方式', width: 150}
                 ,{field: 'protocol', title: '协议', width: 150, sort: true}
                 ,{field: 'obfs', title: '混淆方式', width: 150}
                 ,{field: 'limit', title: '限流', width: 80, sort: true}
+                ,{field: 'used', title: '使用流量(M)', width: 120, sort: true}
                 ,{field: 'remain', title: '剩余流量(M)', width: 120, sort: true}
                 ,{field: 'total', title: '总流量(M)', width: 120, sort: true}
                 ,{field: 'beginTm', title: '开始时间', width: 150, sort: true, templet:'<div>{{ utl.formatDate(d.beginTm)}}</div>'}

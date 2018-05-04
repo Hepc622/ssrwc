@@ -108,6 +108,12 @@ if [[ ${OS} == Ubuntu || ${OS} == Debian ]];then
     # 修改权限
     chmod 755 ssr
     update-rc.d ssr defaults 95
+    cd /usr/local/ssr/
+    # 建立一个硬连接
+    ln ./run_ssr_web /etc/init.d/
+    # 修改权限
+    chmod 755 run_ssr_web
+    update-rc.d run_ssr_web defaults 95
 fi
 
 if [[ ${OS} == CentOS ]];then
@@ -120,6 +126,15 @@ if [[ ${OS} == CentOS ]];then
    # 添加到开机自启
    chkconfig ssr on
    chkconfig --add ssr
+   # 切换到目录
+   cd /usr/local/ssr/
+   # 建立一个硬连接
+   ln ./run_ssr_web /etc/init.d/
+   # 修改权限
+   chmod 755 run_ssr_web
+   # 添加到开机自启
+   chkconfig run_ssr_web on
+   chkconfig --add run_ssr_web
 fi
 
 

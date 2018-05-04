@@ -37,7 +37,7 @@ def get_dict(_type=0):
             if _type == 0:
                 return load_dict
             else:
-                return load_dict.get("port_password", {})
+                return load_dict.get("port_password",{})
     elif regex2.match(platform.python_version()) is not None:
         # 2.7
         # 读取文件
@@ -47,7 +47,7 @@ def get_dict(_type=0):
             if _type == 0:
                 return load_dict
             else:
-                return load_dict.get("port_password", {})
+                return load_dict.get("port_password",{})
     return {}
 
 # 将一个字典对象写入到文件中

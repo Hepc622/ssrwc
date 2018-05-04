@@ -36,17 +36,20 @@ def save_update_port_info(dic=None):
     if dic is not None:
         load_dict = jfileutl.get_dict()
         # 判断是修改还是添加
-        port_password = load_dict.get("port_password", {})
-        exists = False
-        # 通过id 获取对应的端口数据
-        for port,data in port_password.items():
-            if data.get("id") == dic.get("id"):
-                exists = True
-                break
-        if exists:
-            update_port_info(dic, load_dict)
-        else:
+        port_password = load_dict.get("port_password")
+        if not port_password:
             add_port_info(dic, load_dict)
+        else:
+            exists = False
+            # 通过id 获取对应的端口数据
+            for port,data in port_password.items():
+                if data.get("id") == dic.get("id"):
+                    exists = True
+                    break
+            if exists:
+                update_port_info(dic, load_dict)
+            else:
+                add_port_info(dic, load_dict)
     else:
         print("The dic that can`t be null")
 
@@ -126,10 +129,10 @@ def update_port_info(dic=None, load_dict=None):
 
 # 处理数据,将传过来的进行一一放入到json中
 def add_port_info(dic=None, load_dict=None):
-    port_password = load_dict.get("port_password", None)
-    if port_password is None:
+    port_password = load_dict.get("port_password")
+    if not port_password:
         load_dict['port_password']={}
-        port_password = load_dict.get("port_password", None)
+        port_password = load_dict.get("port_password")
     # 要添加的数据
     option_data = {}
     # 修改对应数据
@@ -150,7 +153,7 @@ def add_port_info(dic=None, load_dict=None):
 
     # 判断是否需要更改有效标识
     dateMark = 1
-    flowMark = 1
+    flowMark = 0
     today =  datetime.strptime(datetime.strftime(datetime.now(), "%Y-%m-%d"), "%Y-%m-%d")
     # 如果结束日期大于今天就将有效标签改为0
     if datetime.strptime(endTm, "%Y-%m-%d") >= today:
@@ -209,6 +212,7 @@ def overdue_port_info(dic=None):
                 port_password[port]['flowMark']=1
                 port_password[port]['dateMark']=1
                 port_password[port]['used']=port_password[port]['total']
+                port_password[port]['remain']=0
                 port_password[port]['endTm']=datetime.strftime(datetime.now(), "%Y-%m-%d")
                 break
         # 将指定端口墙了
@@ -235,8 +239,7 @@ def destroy_port_info(dic=None):
                 del port_password[port]
                 break
         # 将指定端口墙了
-        if Linux.delete_port([dic.get("port")]):
-            pass
+        Linux.delete_port([dic.get("port")])
         # 更新到文件中去
         jfileutl.write_file(load_dict)
         # 重启ssr

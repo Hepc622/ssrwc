@@ -10,32 +10,43 @@ class Linux:
 	@staticmethod
 	def add_port(ports):
 		for port in ports:
-			# 添加tcp port
-			command = "iptables -I INPUT -p tcp --dport %s -j ACCEPT && " \
-			 		  "iptables -I INPUT -p udp --dport %s -j ACCEPT && " \
-			 		  "iptables -I OUTPUT -p tcp --sport %s -j ACCEPT && " \
-					  "iptables -I OUTPUT -p udp --sport %s -j ACCEPT" \
-					  %(port, port, port, port)
-			print("Insert the port to a firewall,excute command: %s" %(command,))
-			# 检查是否成功
-			if Linux.ckcomsuccess(os.popen(command).readlines(),command):
-				print("Insert success")
-		# 保存新修改的规则
-		return Linux.save_rules()
+			if Linux.check_ports_open([port]) is not True:
+				# 添加tcp port
+				command = "iptables -I INPUT -p tcp --dport %s -m connlimit --connlimit-above 1 -j ACCEPT && " \
+				 		  "iptables -I INPUT -p udp --dport %s -m connlimit --connlimit-above 1 -j ACCEPT && " \
+				 		  "iptables -I OUTPUT -p tcp --sport %s -j ACCEPT && " \
+						  "iptables -I OUTPUT -p udp --sport %s -j ACCEPT" \
+						  %(port, port, port, port)
+				print("Insert the port to a firewall,excute command: %s" %(command,))
+				# 检查是否成功
+				if Linux.ckcomsuccess(os.popen(command).readlines(),command):
+					print("Insert success")
+				# 保存新修改的规则
+				return Linux.save_rules()
 
 	# 移除一个或多个端口
 	@staticmethod
 	def delete_port(ports):
-		# 解包去除第一元素
+		out_ = ""
+		in_ = ""
 		for port in ports:
-			# 添加tcp port
-			command = "iptables -D INPUT -p tcp --dport %s -j ACCEPT && " \
-			 		  "iptables -D INPUT -p udp --dport %s -j ACCEPT && " \
-			 		  "iptables -D OUTPUT -p tcp --sport %s -j ACCEPT && " \
-					  "iptables -D OUTPUT -p udp --sport %s -j ACCEPT" \
-					  %(port, port, port, port)
-			print("remove a port from the firewall,excute command: %s" %(command,))
-		  	# 检查是否成功
+			out_+='--dport %s|'% (port)
+			in_+='--sport %s|'% (port)
+
+		# 获取output每一个要删除的序号
+		command = "iptables -L -n --line|grep -E '%s'|awk '{print($1)}'"%(out_[0:-1])
+		# 获取出删的序号
+		out_num = os.popen(command).readlines()
+		command = "iptables -L -n --line|grep -E '%s'|awk '{print($1)}'"%(in_[0:-1])
+		in_num = os.popen(command).readlines()
+		# 执行删除INPUT链命令
+		for num in out_num:
+			command = "iptebles -D INPUT %s" %(num)
+			if Linux.ckcomsuccess(os.popen(command).readlines(),command):
+				print("remove success")
+		# 执行删除OUTPUT链命令
+		for num in in_num:
+			command = "iptebles -D OUTPUT %s" %(num)
 			if Linux.ckcomsuccess(os.popen(command).readlines(),command):
 				print("remove success")
 		# 保存新修改的规则
@@ -44,31 +55,10 @@ class Linux:
 	# 更新端口
 	@staticmethod
 	def update_port(p1 ,p2):
-		# 先看有没有p1这个端口有的话才进行下一步操作
-		command = "iptables -L -nvx|grep %s" %(p1)
-		if len(os.popen(command).readlines()) == 4 :
-			# 先移除端口p1
-			command = "iptables -D INPUT -p tcp --dport %s -j ACCEPT && " \
-			 		  "iptables -D INPUT -p udp --dport %s -j ACCEPT && " \
-				 	  "iptables -D OUTPUT -p tcp --sport %s -j ACCEPT && " \
-					  "iptables -D OUTPUT -p udp --sport %s -j ACCEPT" \
-					  %(p1, p1, p1, p1)
-			print("remove a port from the firewall,excute command: %s" %(command,))
-			if Linux.ckcomsuccess(os.popen(command).readlines(),command):
-				# 再添加端口p2
-				command = "iptables -I INPUT -p tcp --dport %s -j ACCEPT && " \
-				 		  "iptables -I INPUT -p udp --dport %s -j ACCEPT && " \
-				 		  "iptables -I OUTPUT -p tcp --sport %s -j ACCEPT && " \
-						  "iptables -I OUTPUT -p udp --sport %s -j ACCEPT" \
-						  %(p2, p2, p2, p2)
-				print("Insert the port to a firewall,excute command: %s" %(command,))
-				if Linux.ckcomsuccess(os.popen(command).readlines(),command):
-					return Linux.save_rules()
-				else:
-					return False
-			else:
-				return False
-		return False
+		# 先移除端口p1
+		Linux.delete_port([p1,p2])
+		# 添加端口p2
+		Linux.add_port([p2])
 			
 	# 统计指定端口流量
 	@staticmethod
@@ -122,6 +112,7 @@ class Linux:
 		return Linux.ckcomsuccess(os.popen(command).readlines(), command)
 
 	# 检测指定端口是否存在于output表和input表
+	@staticmethod
 	def check_ports_open(ports):
 		strs = ""
 		# 组装需要查询的端口用|连接
@@ -133,11 +124,6 @@ class Linux:
 			return True
 		else:
 			return False
-
-	# 限制流量
-	@staticmethod
-	def limit_flow():
-		pass
 
 	# 重启防火墙
 	@staticmethod
@@ -161,7 +147,9 @@ class Linux:
 			# 打印错误信息和执行命令
 			print("The command excute Erro:%s" %(reason,))
 			return False
-
+	# 限制流量
+	def limit_flow():
+		pass
 	# 重启锐速
 	@staticmethod
 	def start_serverSpeeder():
@@ -180,5 +168,5 @@ class Linux:
 	@staticmethod
 	def restart_ssr():
 		command = "service ssr restart"
-		print("restart the serverSpeeder:%s" %(command))
+		print("restart the ssr:%s" %(command))
 		return len(os.popen(command).readlines()) == 0
