@@ -30,7 +30,7 @@ class Connect(object):
     def set_free(self, flag):
         self.__free = flag
 
-    # 关闭连接，设置为空闲状态
+    # 关闭连接,设置为空闲状态
     def close(self):
         self.__free = True
         # print("当前线程", threading.current_thread().name, "这个链接空闲了：", self.__connect)

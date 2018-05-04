@@ -31,7 +31,7 @@ def get_overdue_ports():
             overdue.append(port)
     return overdue
 
-# 处理数据，将传过来的进行一一放入到json对应的port中
+# 处理数据,将传过来的进行一一放入到json对应的port中
 def save_update_port_info(dic=None):
     if dic is not None:
         load_dict = jfileutl.get_dict()
@@ -118,13 +118,13 @@ def update_port_info(dic=None, load_dict=None):
     if int(port) != int(old_port):
         # 更新端口墙规则
         if Linux.update_port(old_port,port):
-            logging.info("Update a rule of port，The origin：%s,The new：%s" %(old_port,port))
+            logging.info("Update a rule of port,The origin：%s,The new：%s" %(old_port,port))
     # 更新到文件中去
     jfileutl.write_file(load_dict)
     # 重启ssr
     Linux.restart_ssr()
 
-# 处理数据，将传过来的进行一一放入到json中
+# 处理数据,将传过来的进行一一放入到json中
 def add_port_info(dic=None, load_dict=None):
     port_password = load_dict.get("port_password", None)
     if port_password is None:

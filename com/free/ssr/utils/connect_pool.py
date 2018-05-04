@@ -11,7 +11,7 @@ from com.free.ssr.utils.connect import Connect
 
 # 链接池
 class ConnectPool(object):
-    # 这是yml配置文件读出来后，转为字典
+    # 这是yml配置文件读出来后,转为字典
     __db_dict = None
     # 链接池
     __connects = []
@@ -24,7 +24,7 @@ class ConnectPool(object):
         if cls.__pool is None:
             # 调用创建连接池
             cls.__init_pool(cls)
-            # 插件对象，实例其父类
+            # 插件对象,实例其父类
             cls.__pool = super(ConnectPool, cls).__new__(cls)
         return cls.__pool
 
@@ -55,13 +55,13 @@ class ConnectPool(object):
         self.__lock.release()
         return count
 
-    # 初始化方法，创建链接池
+    # 初始化方法,创建链接池
     def __init_pool(self):
         # 获取配置文件
         path = os.path.join(os.getcwd(),"db_conf.yml")
         # 打开配置文件
         with open(file=path, mode='rt', encoding='utf-8') as f:
-            # 用yaml读取出来，再转为字典对象
+            # 用yaml读取出来,再转为字典对象
             self.__db_dict = dict(yaml.load(f))
         # 初始化默认配置
         if self.__db_dict.get('user') is None:
@@ -93,7 +93,7 @@ class ConnectPool(object):
             p_init = self.__db_dict.get('initPoolSize')
             # 判断一下连接池最小值是否大于连接池最大值
             if p_min > p_max:
-                raise Exception('''链接池的最小值大于最大值，请重新设定''')
+                raise Exception('''链接池的最小值大于最大值,请重新设定''')
             # 初始化链接池大小
             for i in range(p_init):
                 connect = self.__create_connect(self)
@@ -101,7 +101,7 @@ class ConnectPool(object):
                 if len(self.__connects) <= p_max:
                     self.__connects.append(Connect(connect))
                 else:
-                    raise Exception('初始化大小，大于最大值')
+                    raise Exception('初始化大小,大于最大值')
         except IOError:
             # 打印异常
             traceback.print_exception()
@@ -115,27 +115,27 @@ class ConnectPool(object):
         self.__lock.acquire()
         # 需要返回的数据链接
         connect = None
-        # 获取一个空闲的连接，不知道是否有效
+        # 获取一个空闲的连接,不知道是否有效
         connect = self.__get_real_connect()
         if connect is None:
-            # 如果没有空闲连接了，就看看链接池的最大是有没有达到配置的最大值，没有的话就去创建，有的等待其他连接释放连接
+            # 如果没有空闲连接了,就看看链接池的最大是有没有达到配置的最大值,没有的话就去创建,有的等待其他连接释放连接
             if len(self.__connects) < self.__db_dict.get("maxPoolSize"):
-                # 没有达到最大值，所以就再去创建链接了
+                # 没有达到最大值,所以就再去创建链接了
                 connect = Connect(self.__create_connect())
                 self.__connects.append(connect)
                 self.__show_pool_num("小于20去创建了一个连接：", connect)
             else:
-                # 达到最大值了，在这里等等吧
+                # 达到最大值了,在这里等等吧
                 while connect is None:
                     time.sleep(self.__db_dict.get("waitTime"))
                     # 获取线程池也有的空闲连接
                     connect = self.__get_real_connect()
-                    # self.__show_pool_num("连接池中没有空闲，等了会才拿出来的：", connect)
+                    # self.__show_pool_num("连接池中没有空闲,等了会才拿出来的：", connect)
         else:
             #  把状态设置为忙碌
             connect.set_free(False)
             self.__show_pool_num("连接池中有空闲连接直接拿出来", connect)
-        #  释放，关闭同步
+        #  释放,关闭同步
         self.__lock.release()
         return connect
 
@@ -146,10 +146,10 @@ class ConnectPool(object):
         for conn in self.__connects:
             if conn.get_free():
                 try:
-                    # 如果ping不通说明是无效链接，如果ping通了直接返回就行
+                    # 如果ping不通说明是无效链接,如果ping通了直接返回就行
                     conn.ping()
                 except Exception:
-                    # 没有ping通，重新生成一个链接
+                    # 没有ping通,重新生成一个链接
                     conn = Connect(self.__create_connect())
                 connect = conn
                 break

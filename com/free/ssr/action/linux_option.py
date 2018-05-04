@@ -16,7 +16,7 @@ class Linux:
 			 		  "iptables -I OUTPUT -p tcp --sport %s -j ACCEPT && " \
 					  "iptables -I OUTPUT -p udp --sport %s -j ACCEPT" \
 					  %(port, port, port, port)
-			logging.info("Insert the port to a firewall，excute command: %s" %(command,))
+			logging.info("Insert the port to a firewall,excute command: %s" %(command,))
 			# 检查是否成功
 			if Linux.ckcomsuccess(os.popen(command).readlines(),command):
 				logging.info("Insert success")
@@ -34,7 +34,7 @@ class Linux:
 			 		  "iptables -D OUTPUT -p tcp --sport %s -j ACCEPT && " \
 					  "iptables -D OUTPUT -p udp --sport %s -j ACCEPT" \
 					  %(port, port, port, port)
-			logging.info("remove a port from the firewall，excute command： %s" %(command,))
+			logging.info("remove a port from the firewall,excute command： %s" %(command,))
 		  	# 检查是否成功
 			if Linux.ckcomsuccess(os.popen(command).readlines(),command):
 				logging.info("remove success")
@@ -53,7 +53,7 @@ class Linux:
 				 	  "iptables -D OUTPUT -p tcp --sport %s -j ACCEPT && " \
 					  "iptables -D OUTPUT -p udp --sport %s -j ACCEPT" \
 					  %(p1, p1, p1, p1)
-			logging.info("remove a port from the firewall，excute command： %s" %(command,))
+			logging.info("remove a port from the firewall,excute command： %s" %(command,))
 			if Linux.ckcomsuccess(os.popen(command).readlines(),command):
 				# 再添加端口p2
 				command = "iptables -I INPUT -p tcp --dport %s -j ACCEPT && " \
@@ -61,7 +61,7 @@ class Linux:
 				 		  "iptables -I OUTPUT -p tcp --sport %s -j ACCEPT && " \
 						  "iptables -I OUTPUT -p udp --sport %s -j ACCEPT" \
 						  %(p2, p2, p2, p2)
-				logging.info("Insert the port to a firewall，excute command： %s" %(command,))
+				logging.info("Insert the port to a firewall,excute command： %s" %(command,))
 				if Linux.ckcomsuccess(os.popen(command).readlines(),command):
 					return Linux.save_rules()
 				else:
@@ -99,9 +99,9 @@ class Linux:
 		count = 1
 		# 将udp和tcp的统计起来
 		for index,num in enumerate(flows):
-			# 获取端口，判断是否为奇数，是的话就是端口号
+			# 获取端口,判断是否为奇数,是的话就是端口号
 			if index%2 is 0:
-				# 从字典里拿出来，看有没有值，如果没有值就添加一个只进去，以便下次累加
+				# 从字典里拿出来,看有没有值,如果没有值就添加一个只进去,以便下次累加
 				if flow_dic.get(num) is None:
 					flow_dic[num] = 0
 			else:

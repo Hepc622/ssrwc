@@ -33,9 +33,9 @@ class Job(object):
         job()
         
     def to_do(self, job=None,typ=0, day=1, h=0, m=0, s=0):
-        # h表示设定的小时，m为设定的分钟
+        # h表示设定的小时,m为设定的分钟
         while True: 
-            # 等于6的话，每秒执行一次
+            # 等于6的话,每秒执行一次
             if typ is not 6:
                 while True:
                     if typ is 8:
@@ -103,7 +103,7 @@ class Job(object):
 
     #   运行所有的job
     def run(self):
-        # 循环去执行每一方法，每一个方法都开一个线程去执行
+        # 循环去执行每一方法,每一个方法都开一个线程去执行
         for j_dict in self.jobs:
             fun = j_dict.get('job')
             typ = j_dict.get('type')

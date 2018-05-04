@@ -6,7 +6,7 @@ from flask import jsonify
 
 
 class Result(object):
-    # 0表示请求成功，其他表示请求失败，3为没有权限
+    # 0表示请求成功,其他表示请求失败,3为没有权限
     code = 0
     # 返回给前端的消息
     message = ""
@@ -21,6 +21,6 @@ class Result(object):
         self.data = data
         self.count = count
 
-    # 获取json，将对象转为json
+    # 获取json,将对象转为json
     def get_json(self):
         return jsonify(self.__dict__)

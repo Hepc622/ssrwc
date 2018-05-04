@@ -23,7 +23,7 @@ def login():
         user = {
             'userName': user_name
         }
-        logging.info("The use exist，create a token return to page")
+        logging.info("The use exist,create a token return to page")
         token = token_utils.create_token(user)
         user['token'] = token
         # 获取用户的基本信息

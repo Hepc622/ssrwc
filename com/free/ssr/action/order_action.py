@@ -78,7 +78,7 @@ def deal_form():
     if userId == '' or userId is None:
         # 生成uuid
        userId = uuid.uuid1()
-    # 用户不为空，但是orderid为空，就添加orders
+    # 用户不为空,但是orderid为空,就添加orders
     if id == '' or id is None:
         # 生成uuid
         id = uuid.uuid1()

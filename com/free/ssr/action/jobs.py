@@ -7,12 +7,12 @@ import logging
 from com.free.ssr.action.linux_option import Linux
 
 
-# 每天0点检查该服务器的所有端口的有效期，如果过期了，需要将这个端口给墙了
+# 每天0点检查该服务器的所有端口的有效期,如果过期了,需要将这个端口给墙了
 def validate_dealine(self):
     # 获取已经过期的port
     port_service.check_port_date()
     overdue = port_service.get_overdue_ports()
-    # 先查一下这些端口是否在开放，如果开发就将他关闭
+    # 先查一下这些端口是否在开放,如果开发就将他关闭
     if Linux.check_ports_open(overdue):
         logging.info("The overdue ports %s" %(overdue,))
         # 将这些端口墙了
@@ -27,7 +27,7 @@ def count_flow():
     port_info = ssrj.get("port_password")
     # 获取每个端口产生的流量
     port_dic = Linux.count_all_port()
-    # 记录是否有超出流量的用户，有的话需要重启一下ssr,重新加载一下配置文件
+    # 记录是否有超出流量的用户,有的话需要重启一下ssr,重新加载一下配置文件
     reboot_ssr = False
     # 遍历字典
     for port,flow in port_dic.items():
@@ -49,12 +49,12 @@ def count_flow():
             if remain <= 0:
                 # 将标志至为无效
                 port_data['flowMark'] = 1
-                # 这里不能把端口给墙了只能去重启一下ssr让他重新读取一下配置文件，因为只是流量超出了，而不是过期了
+                # 这里不能把端口给墙了只能去重启一下ssr让他重新读取一下配置文件,因为只是流量超出了,而不是过期了
                 reboot_ssr = True
 
 	# 判断是否需要重启ssr
     if reboot_ssr:
-        logging.info("have some customer flow out of the total，need restart the ssr software,The user info：%s" % (ssrj,))
+        logging.info("have some customer flow out of the total,need restart the ssr software,The user info：%s" % (ssrj,))
         jfileutl.write_file(ssrj)
         # 重启ssr
         Linux.restart_ssr()
@@ -73,7 +73,7 @@ def clear_port_flow():
         # 将他们的流量都清空
         port_data["used"] = 0
         port_data["remain"] = port_data["total"]
-    logging.info("The 1st of every month clear the flows，clear after the data：" % (ssrj,))
+    logging.info("The 1st of every month clear the flows,clear after the data：" % (ssrj,))
     # 写到文件里去
     jfileutl.write_file(ssrj)
     # 将OUTPUT表中的数据流量全部清空
@@ -82,7 +82,7 @@ def clear_port_flow():
     Linux.restart_ssr()
 
 
-# 把json的数据写到数据库中去，每天0点执行
+# 把json的数据写到数据库中去,每天0点执行
 # def updateJson2Mysql():
 #     # 获取所有的端口信息
 #     ssrj = jfileutl.get_dict()['port_password']
@@ -90,11 +90,11 @@ def clear_port_flow():
 #     for port,data in ssrj.items():
 #         port_service.update_port_flow(data)
 
-# 检查锐速是否开启，没有开启将其开启。每天0点执行
+# 检查锐速是否开启,没有开启将其开启。每天0点执行
 def check_serverSpeeder_is_run():
     # 检查是否开启了加速
     if not Linux.serverSpeeder_is_run():
-        logging.info("The serverSpeeder did`t runing，starting the serverSpeeder...")
+        logging.info("The serverSpeeder did`t runing,starting the serverSpeeder...")
         # 启动加速
         Linux.start_serverSpeeder()
         

@@ -18,8 +18,8 @@ def find_config_path():
         return config_path
     return None
 
-# 打开一个json文件，并将其转为一个字典对象
-# type=0为获取所有的数据，1为获取port_password的数据
+# 打开一个json文件,并将其转为一个字典对象
+# type=0为获取所有的数据,1为获取port_password的数据
 def get_dict(_type=0):
     # 如果path为空的话就获取默认的路径
     path = find_config_path()
