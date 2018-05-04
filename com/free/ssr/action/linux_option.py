@@ -113,13 +113,14 @@ class Linux:
 
 	# 检测指定端口是否存在于output表和input表
 	@staticmethod
-	def check_ports_open(ports):
+	def check_ports_open(ports,typ='INPUT'):
 		strs = ""
 		# 组装需要查询的端口用|连接
 		for port in ports:
-			port += "|"
-		command = "iptables -L -nvx|grep -E '%s'" % (strs[0:-1])
+			strs += ":" + str(port) + "|"
+		command = "iptables -L %s -nvx|grep -E '%s'" % (typ,strs[0:-1])
 		print("check ports:%swhether or not open" %(ports,))
+		print(command)
 		if len(os.popen(command).readlines()) != 0:
 			return True
 		else:
