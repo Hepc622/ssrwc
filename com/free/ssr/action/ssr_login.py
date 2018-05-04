@@ -9,7 +9,7 @@ from com.free.ssr.vo.result import Result
 import logging
 
 
-sl = Bluelogging.info('sl', __name__)
+sl = Blueprint('sl', __name__)
 
 
 @sl.route('/login', methods=['POST'])

@@ -7,9 +7,10 @@ from flask import request, Blueprint
 
 import com.free.ssr.action.port_service as port_service
 from com.free.ssr.vo.result import Result
+import logging
 
 
-sa = Bluelogging.info('sa', __name__)
+sa = Blueprint('sa', __name__)
 
 
 # 获取已经使用过的端口
