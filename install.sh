@@ -154,7 +154,7 @@ fi
 # 将config文件硬链接一个到ssr下
 cd /usr/local/ssr/shadowsocks
 # 创建硬链接,同步实时更新的
-if [ -z $(find /usr/local/ssr/bak/ -name config.json|awk '{print $1}') ];then
+if [ -n $(find /usr/local/ssr/bak/ -name config.json|awk '{print $1}') ];then
     mv /usr/local/ssr/bak/config.json /usr/local/ssr/bak/config.json.bak
 fi
 ln ./config.json /usr/local/ssr/bak/
