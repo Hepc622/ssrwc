@@ -34,7 +34,7 @@ class Linux:
 			 		  "iptables -D OUTPUT -p tcp --sport %s -j ACCEPT && " \
 					  "iptables -D OUTPUT -p udp --sport %s -j ACCEPT" \
 					  %(port, port, port, port)
-			print("remove a port from the firewall,excute command： %s" %(command,))
+			print("remove a port from the firewall,excute command: %s" %(command,))
 		  	# 检查是否成功
 			if Linux.ckcomsuccess(os.popen(command).readlines(),command):
 				print("remove success")
@@ -53,7 +53,7 @@ class Linux:
 				 	  "iptables -D OUTPUT -p tcp --sport %s -j ACCEPT && " \
 					  "iptables -D OUTPUT -p udp --sport %s -j ACCEPT" \
 					  %(p1, p1, p1, p1)
-			print("remove a port from the firewall,excute command： %s" %(command,))
+			print("remove a port from the firewall,excute command: %s" %(command,))
 			if Linux.ckcomsuccess(os.popen(command).readlines(),command):
 				# 再添加端口p2
 				command = "iptables -I INPUT -p tcp --dport %s -j ACCEPT && " \
@@ -61,7 +61,7 @@ class Linux:
 				 		  "iptables -I OUTPUT -p tcp --sport %s -j ACCEPT && " \
 						  "iptables -I OUTPUT -p udp --sport %s -j ACCEPT" \
 						  %(p2, p2, p2, p2)
-				print("Insert the port to a firewall,excute command： %s" %(command,))
+				print("Insert the port to a firewall,excute command: %s" %(command,))
 				if Linux.ckcomsuccess(os.popen(command).readlines(),command):
 					return Linux.save_rules()
 				else:
@@ -85,7 +85,7 @@ class Linux:
 			# 添加到字典里去 端口做key流量做value
 			port_dict[port] = flow_sum
 		# 返回总流量字典
-		print("count the ports flows ： %s" %(port_dict))
+		print("count the ports flows : %s" %(port_dict))
 		return port_dict
 
 	# 统计允许出去的端口流量
@@ -109,7 +109,7 @@ class Linux:
 				pre_port = flows[index-1]
 				# 累加起来
 				flow_dic[pre_port] = int(flow_dic.get(pre_port)+int(num))
-		print("count the ports flows ： %s" %(port_dict))
+		print("count the ports flows : %s" %(port_dict))
 		# 返回正在活跃总流量字典
 		return port_dict
 
@@ -128,7 +128,7 @@ class Linux:
 		for port in ports:
 			port += "|"
 		command = "iptables -L -nvx|grep -E '%s'" % (strs[0:-1])
-		print("check ports：%swhether or not open" %(ports,))
+		print("check ports:%swhether or not open" %(ports,))
 		if len(os.popen(command).readlines()) != 0:
 			return True
 		else:
@@ -151,7 +151,7 @@ class Linux:
 	def ckcomsuccess(result,command):
 		# 返回数据长度是否为0如果为0说明执行成功没有报任何错误
 		if len(result) == 0:
-			print("command：%s excute done!" %(command))
+			print("command:%s excute done!" %(command))
 			return True
 		else:
 			# 长度大于0
@@ -159,26 +159,26 @@ class Linux:
 			for res in result:
 				reason += res
 			# 打印错误信息和执行命令
-			print("命令执行出现错误：%s" %(reason,))
+			print("命令执行出现错误:%s" %(reason,))
 			return False
 
 	# 重启锐速
 	@staticmethod
 	def start_serverSpeeder():
 		command = "service serverSpeeder start"
-		print("start the serverSpeeder：%s" %(command))
+		print("start the serverSpeeder:%s" %(command))
 		Linux.ckcomsuccess(os.popen(command).readlines(), command)
 
 	# 查看锐速转态是否运行
 	@staticmethod
 	def serverSpeeder_is_run():
 		command = "service serverSpeeder status|grep 'ServerSpeeder is NOT running'"
-		print("check the serverSpeeder whether or not runing：%s" %(command))
+		print("check the serverSpeeder whether or not runing:%s" %(command))
 		return len(os.popen(command).readlines()) == 0
 
 	# 重启ssr
 	@staticmethod
 	def restart_ssr():
 		command = "service ssr restart"
-		print("restart the serverSpeeder：%s" %(command))
+		print("restart the serverSpeeder:%s" %(command))
 		return len(os.popen(command).readlines()) == 0

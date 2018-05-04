@@ -54,7 +54,7 @@ def count_flow():
 
 	# 判断是否需要重启ssr
     if reboot_ssr:
-        print("have some customer flow out of the total,need restart the ssr software,The user info：%s" % (ssrj,))
+        print("have some customer flow out of the total,need restart the ssr software,The user info:%s" % (ssrj,))
         jfileutl.write_file(ssrj)
         # 重启ssr
         Linux.restart_ssr()
@@ -73,7 +73,7 @@ def clear_port_flow():
         # 将他们的流量都清空
         port_data["used"] = 0
         port_data["remain"] = port_data["total"]
-    print("The 1st of every month clear the flows,clear after the data：" % (ssrj,))
+    print("The 1st of every month clear the flows,clear after the data:" % (ssrj,))
     # 写到文件里去
     jfileutl.write_file(ssrj)
     # 将OUTPUT表中的数据流量全部清空

@@ -124,14 +124,14 @@ class ConnectPool(object):
                 # 没有达到最大值,所以就再去创建链接了
                 connect = Connect(self.__create_connect())
                 self.__connects.append(connect)
-                self.__show_pool_num("小于20去创建了一个连接：", connect)
+                self.__show_pool_num("小于20去创建了一个连接:", connect)
             else:
                 # 达到最大值了,在这里等等吧
                 while connect is None:
                     time.sleep(self.__db_dict.get("waitTime"))
                     # 获取线程池也有的空闲连接
                     connect = self.__get_real_connect()
-                    # self.__show_pool_num("连接池中没有空闲,等了会才拿出来的：", connect)
+                    # self.__show_pool_num("连接池中没有空闲,等了会才拿出来的:", connect)
         else:
             #  把状态设置为忙碌
             connect.set_free(False)
@@ -164,8 +164,8 @@ class ConnectPool(object):
         print("当前线程", threading.current_thread().name,
               str+": ", connect,
               "当前连接池数总数: ", len(self.__connects),
-              "正在使用的链接数： ", (len(self.__connects)-count),
-              "空闲连接数： ",count)
+              "正在使用的链接数: ", (len(self.__connects)-count),
+              "空闲连接数: ",count)
 
     # 创建链接
     def __create_connect(self):
