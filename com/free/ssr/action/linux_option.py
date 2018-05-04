@@ -159,7 +159,7 @@ class Linux:
 			for res in result:
 				reason += res
 			# 打印错误信息和执行命令
-			print("命令执行出现错误:%s" %(reason,))
+			print("The command excute Erro:%s" %(reason,))
 			return False
 
 	# 重启锐速
