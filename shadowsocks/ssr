@@ -7,28 +7,18 @@
 SSR_HOME=/usr/local/ssr/shadowsocks
 
 case $1 in  
+	start)  
+	sh $SSR_HOME/run.sh  
+	;;   
 
-start)  
+	stop)     
+	sh $SSR_HOME/stop.sh  
+	;;   
 
-sh $SSR_HOME/run.sh  
-echo "SSR and ssrwc is running!"
+	restart)  
+	sh $SSR_HOME/stop.sh
 
-;;   
-
-stop)     
-
-sh $SSR_HOME/stop.sh  
-echo "SSR and ssrwc is stop!"
-;;   
-
-restart)  
-
-sh $SSR_HOME/run.sh  
-
-sh $SSR_HOME/stop.sh
-echo "SSR and ssrwc is restart!"
-;;   
-
-esac      
-
+	sh $SSR_HOME/run.sh  
+	;;
+esac
 exit 0
