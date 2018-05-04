@@ -141,6 +141,7 @@ if [[ ${OS} == CentOS && $CentOS_RHEL_version == 7 ]];then
 -A INPUT -i lo -j ACCEPT
 -A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 3306 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 443 -j ACCEPT
 -A INPUT -j REJECT --reject-with icmp-host-prohibited
 -A FORWARD -j REJECT --reject-with icmp-host-prohibited
@@ -176,6 +177,9 @@ fi
 echo "将系统跟换至3.10.0-229，请在重启后运行serverspeeder-all.sh这个脚本,进行安装锐速加速"
 # 安装锐速
 wget -N --no-check-certificate https://raw.githubusercontent.com/91yun/serverspeeder/master/serverspeeder-all.sh && bash serverspeeder-all.sh
+# 添加可执行权限
+cd /root
+chmod 755 serverspeeder-all.sh
 # 启动ssr
 service ssr start
 echo "可以使用service ssr (start|stop|restart) 来操作ssrwc"
