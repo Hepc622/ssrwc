@@ -18,7 +18,7 @@ def auth_filter():
         # 验证权限
         if utils_token.valid_token(token) is not False:
             # 验证token是否有效
-            logging.info("validate the token,if it were valid,we pass the querst")
+            print("validate the token,if it were valid,we pass the querst")
             return
         else:
             url = request.url.split("?")[0]

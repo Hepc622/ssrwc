@@ -16,10 +16,10 @@ class Linux:
 			 		  "iptables -I OUTPUT -p tcp --sport %s -j ACCEPT && " \
 					  "iptables -I OUTPUT -p udp --sport %s -j ACCEPT" \
 					  %(port, port, port, port)
-			logging.info("Insert the port to a firewall,excute command: %s" %(command,))
+			print("Insert the port to a firewall,excute command: %s" %(command,))
 			# 检查是否成功
 			if Linux.ckcomsuccess(os.popen(command).readlines(),command):
-				logging.info("Insert success")
+				print("Insert success")
 		# 保存新修改的规则
 		return Linux.save_rules()
 
@@ -34,10 +34,10 @@ class Linux:
 			 		  "iptables -D OUTPUT -p tcp --sport %s -j ACCEPT && " \
 					  "iptables -D OUTPUT -p udp --sport %s -j ACCEPT" \
 					  %(port, port, port, port)
-			logging.info("remove a port from the firewall,excute command： %s" %(command,))
+			print("remove a port from the firewall,excute command： %s" %(command,))
 		  	# 检查是否成功
 			if Linux.ckcomsuccess(os.popen(command).readlines(),command):
-				logging.info("remove success")
+				print("remove success")
 		# 保存新修改的规则
 		return Linux.save_rules()
 
@@ -53,7 +53,7 @@ class Linux:
 				 	  "iptables -D OUTPUT -p tcp --sport %s -j ACCEPT && " \
 					  "iptables -D OUTPUT -p udp --sport %s -j ACCEPT" \
 					  %(p1, p1, p1, p1)
-			logging.info("remove a port from the firewall,excute command： %s" %(command,))
+			print("remove a port from the firewall,excute command： %s" %(command,))
 			if Linux.ckcomsuccess(os.popen(command).readlines(),command):
 				# 再添加端口p2
 				command = "iptables -I INPUT -p tcp --dport %s -j ACCEPT && " \
@@ -61,7 +61,7 @@ class Linux:
 				 		  "iptables -I OUTPUT -p tcp --sport %s -j ACCEPT && " \
 						  "iptables -I OUTPUT -p udp --sport %s -j ACCEPT" \
 						  %(p2, p2, p2, p2)
-				logging.info("Insert the port to a firewall,excute command： %s" %(command,))
+				print("Insert the port to a firewall,excute command： %s" %(command,))
 				if Linux.ckcomsuccess(os.popen(command).readlines(),command):
 					return Linux.save_rules()
 				else:
@@ -85,7 +85,7 @@ class Linux:
 			# 添加到字典里去 端口做key流量做value
 			port_dict[port] = flow_sum
 		# 返回总流量字典
-		logging.info("count the ports flows ： %s" %(port_dict))
+		print("count the ports flows ： %s" %(port_dict))
 		return port_dict
 
 	# 统计允许出去的端口流量
@@ -109,7 +109,7 @@ class Linux:
 				pre_port = flows[index-1]
 				# 累加起来
 				flow_dic[pre_port] = int(flow_dic.get(pre_port)+int(num))
-		logging.info("count the ports flows ： %s" %(port_dict))
+		print("count the ports flows ： %s" %(port_dict))
 		# 返回正在活跃总流量字典
 		return port_dict
 
@@ -118,7 +118,7 @@ class Linux:
 	def clear_output_port_flow():
 		# 清除所有的链表流量
 		command = "iptables -Z"
-		logging.info("clear the all of OUTPUT table flow data")
+		print("clear the all of OUTPUT table flow data")
 		return Linux.ckcomsuccess(os.popen(command).readlines(), command)
 
 	# 检测指定端口是否存在于output表和input表
@@ -128,7 +128,7 @@ class Linux:
 		for port in ports:
 			port += "|"
 		command = "iptables -L -nvx|grep -E '%s'" % (strs[0:-1])
-		logging.info("check ports：%swhether or not open" %(ports,))
+		print("check ports：%swhether or not open" %(ports,))
 		if len(os.popen(command).readlines()) != 0:
 			return True
 		else:
@@ -143,7 +143,7 @@ class Linux:
 	@staticmethod
 	def save_rules():
 		command = "service iptables save"
-		logging.info("save the firewall info to /etc/sysconfig/iptables that file")
+		print("save the firewall info to /etc/sysconfig/iptables that file")
 		return Linux.ckcomsuccess(os.popen(command).readlines(), command)
 
 	# 检查命令是否执行成功（那种执行之后没有任何返回数据的命令）
@@ -151,7 +151,7 @@ class Linux:
 	def ckcomsuccess(result,command):
 		# 返回数据长度是否为0如果为0说明执行成功没有报任何错误
 		if len(result) == 0:
-			logging.info("command：%s excute done！" %(command))
+			print("command：%s excute done！" %(command))
 			return True
 		else:
 			# 长度大于0
@@ -159,26 +159,26 @@ class Linux:
 			for res in result:
 				reason += res
 			# 打印错误信息和执行命令
-			logging.info("命令执行出现错误：%s" %(reason,))
+			print("命令执行出现错误：%s" %(reason,))
 			return False
 
 	# 重启锐速
 	@staticmethod
 	def start_serverSpeeder():
 		command = "service serverSpeeder start"
-		logging.info("start the serverSpeeder：%s" %(command))
+		print("start the serverSpeeder：%s" %(command))
 		Linux.ckcomsuccess(os.popen(command).readlines(), command)
 
 	# 查看锐速转态是否运行
 	@staticmethod
 	def serverSpeeder_is_run():
 		command = "service serverSpeeder status|grep 'ServerSpeeder is NOT running'"
-		logging.info("check the serverSpeeder whether or not runing：%s" %(command))
+		print("check the serverSpeeder whether or not runing：%s" %(command))
 		return len(os.popen(command).readlines()) == 0
 
 	# 重启ssr
 	@staticmethod
 	def restart_ssr():
 		command = "service ssr restart"
-		logging.info("restart the serverSpeeder：%s" %(command))
+		print("restart the serverSpeeder：%s" %(command))
 		return len(os.popen(command).readlines()) == 0
