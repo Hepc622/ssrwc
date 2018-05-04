@@ -1,5 +1,5 @@
 #!/usr/bin/ python
-# -*- coding: utf-8 -*-
+# coding: utf-8
 
 import com.free.ssr.utils.token_utils as utils_token
 import logging
@@ -18,7 +18,7 @@ def auth_filter():
         # 验证权限
         if utils_token.valid_token(token) is not False:
             # 验证token是否有效
-            print("validate the token,if it were valid,we pass the querst")
+            logging.info("validate the token,if it were valid,we pass the querst")
             return
         else:
             url = request.url.split("?")[0]

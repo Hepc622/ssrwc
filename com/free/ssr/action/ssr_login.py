@@ -1,5 +1,5 @@
 #!/usr/bin/ python
-# -*- coding: utf-8 -*-
+# coding: utf-8
 
 import hashlib
 
@@ -9,7 +9,7 @@ from com.free.ssr.vo.result import Result
 import logging
 
 
-sl = Blueprint('sl', __name__)
+sl = Bluelogging.info('sl', __name__)
 
 
 @sl.route('/login', methods=['POST'])
@@ -18,12 +18,12 @@ def login():
     pwd = request.form['password']
     hl = hashlib.md5()
     hl.update(pwd.encode(encoding='utf-8'))
-    print(user_name, hl.hexdigest())
+    logging.info(user_name, hl.hexdigest())
     if user_name == 'admin' and hl.hexdigest() == 'd6d2c08b5e680606776e1a8ea1c9fdbd':
         user = {
             'userName': user_name
         }
-        print("The use exist,create a token return to page")
+        logging.info("The use exist,create a token return to page")
         token = token_utils.create_token(user)
         user['token'] = token
         # 获取用户的基本信息
@@ -34,7 +34,7 @@ def login():
 
 @sl.route('/login_out', methods=["GET"])
 def login_out():
-    print("user login out")
+    logging.info("user login out")
     # 获取用户的基本信息
     return redirect("static/pages/login.html")
 

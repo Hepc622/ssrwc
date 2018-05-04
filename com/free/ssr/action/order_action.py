@@ -1,5 +1,5 @@
 #!/usr/bin/ python
-# -*- coding: utf-8 -*-
+# coding: utf-8
 
 import uuid
 
@@ -9,7 +9,7 @@ import com.free.ssr.action.port_service as port_service
 from com.free.ssr.vo.result import Result
 
 
-sa = Blueprint('sa', __name__)
+sa = Bluelogging.info('sa', __name__)
 
 
 # 获取已经使用过的端口
@@ -29,7 +29,7 @@ def query():
     begin = int(page) * int(limit) - int(limit)
     end = int(page) * int(limit)
     count = len(port_service.get_all_port().items())
-    print(count)
+    logging.info(count)
     # 获取出所有的数据
     order = port_service.query_valid_port_info(begin_tm, end_tm, begin, end)
     return Result(data=order, count=count).get_json()

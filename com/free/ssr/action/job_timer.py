@@ -1,5 +1,5 @@
 #!/usr/bin/ python
-# -*- coding: utf-8 -*-
+# coding: utf-8
 
 import threading
 import datetime
@@ -112,7 +112,7 @@ class Job(object):
             m = j_dict.get('minute')
             s = j_dict.get('second')
             if hasattr(fun, "__call__"):
-                print(fun, "start....")
+                logging.info(fun, "start....")
                 threading.Thread(target=self.to_do, args=(fun, typ, day, h, m, s,))
             else:
                 break
