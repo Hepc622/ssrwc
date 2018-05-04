@@ -16,7 +16,7 @@ class Linux:
 			 		  "iptables -I OUTPUT -p tcp --sport %s -j ACCEPT && " \
 					  "iptables -I OUTPUT -p udp --sport %s -j ACCEPT" \
 					  %(port, port, port, port)
-			logging.info("Insert the port to a firewall，excute command：\n %s" %(command,))
+			logging.info("Insert the port to a firewall，excute command: %s" %(command,))
 			# 检查是否成功
 			if Linux.ckcomsuccess(os.popen(command).readlines(),command):
 				logging.info("Insert success")
@@ -34,7 +34,7 @@ class Linux:
 			 		  "iptables -D OUTPUT -p tcp --sport %s -j ACCEPT && " \
 					  "iptables -D OUTPUT -p udp --sport %s -j ACCEPT" \
 					  %(port, port, port, port)
-			logging.info("remove a port from the firewall，excute command：\n %s" %(command,))
+			logging.info("remove a port from the firewall，excute command： %s" %(command,))
 		  	# 检查是否成功
 			if Linux.ckcomsuccess(os.popen(command).readlines(),command):
 				logging.info("remove success")
@@ -53,7 +53,7 @@ class Linux:
 				 	  "iptables -D OUTPUT -p tcp --sport %s -j ACCEPT && " \
 					  "iptables -D OUTPUT -p udp --sport %s -j ACCEPT" \
 					  %(p1, p1, p1, p1)
-			logging.info("remove a port from the firewall，excute command：\n %s" %(command,))
+			logging.info("remove a port from the firewall，excute command： %s" %(command,))
 			if Linux.ckcomsuccess(os.popen(command).readlines(),command):
 				# 再添加端口p2
 				command = "iptables -I INPUT -p tcp --dport %s -j ACCEPT && " \
@@ -61,7 +61,7 @@ class Linux:
 				 		  "iptables -I OUTPUT -p tcp --sport %s -j ACCEPT && " \
 						  "iptables -I OUTPUT -p udp --sport %s -j ACCEPT" \
 						  %(p2, p2, p2, p2)
-				logging.info("Insert the port to a firewall，excute command：\n %s" %(command,))
+				logging.info("Insert the port to a firewall，excute command： %s" %(command,))
 				if Linux.ckcomsuccess(os.popen(command).readlines(),command):
 					return Linux.save_rules()
 				else:
@@ -85,7 +85,7 @@ class Linux:
 			# 添加到字典里去 端口做key流量做value
 			port_dict[port] = flow_sum
 		# 返回总流量字典
-		logging.info("count the ports flows ：\n %s" %(port_dict))
+		logging.info("count the ports flows ： %s" %(port_dict))
 		return port_dict
 
 	# 统计允许出去的端口流量
@@ -109,7 +109,7 @@ class Linux:
 				pre_port = flows[index-1]
 				# 累加起来
 				flow_dic[pre_port] = int(flow_dic.get(pre_port)+int(num))
-		logging.info("count the ports flows ：\n %s" %(port_dict))
+		logging.info("count the ports flows ： %s" %(port_dict))
 		# 返回正在活跃总流量字典
 		return port_dict
 
