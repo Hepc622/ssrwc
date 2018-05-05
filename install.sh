@@ -184,20 +184,17 @@ pip install pyjwt
 
 #Install serverSpeeder
 # 判断是否为3.10.0的内核
-cd /root
 if [ -z $(uname -a|grep '3.10.0-229.1.2.el7.x86_64') ];then
+    cd /root
     # 不是3.10.0的内核，更换内核
     rpm -ivh http://soft.91yun.org/ISO/Linux/CentOS/kernel/kernel-3.10.0-229.1.2.el7.x86_64.rpm --force
+    # 安装锐速
+    wget -N --no-check-certificate https://raw.githubusercontent.com/91yun/serverspeeder/master/serverspeeder-all.sh && bash serverspeeder-all.sh
 fi
 
-# 安装锐速
-wget -N --no-check-certificate https://raw.githubusercontent.com/91yun/serverspeeder/master/serverspeeder-all.sh && bash serverspeeder-all.sh
-# 添加可执行权限
-cd /root
-chmod 755 serverspeeder-all.sh
 # 启动ssr
 service ssr start
-echo "将系统内核更换至3.10.0-229，请在重启后运行serverspeeder-all.sh这个脚本,进行安装锐速加速"
+echo -e "将系统内核更换至3.10.0-229\003[31m 请在重启后运行serverspeeder-all.sh脚本 \33[0m,进行安装锐速加速"
 echo "可以使用service ssr (start|stop|restart) 来操作ssrwc"
 echo "直接使用ip地址访问web控制"
 echo "欢迎纠正错误，git地址：https://github.com/Hepc622/ssrwc.git"
