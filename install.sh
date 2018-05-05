@@ -194,7 +194,7 @@ fi
 
 # 启动ssr
 service ssr start
-echo -e "将系统内核更换至3.10.0-229\003[31m 请在重启后运行serverspeeder-all.sh脚本 \33[0m,进行安装锐速加速"
+echo -e "将系统内核更换至3.10.0-229\033[31m 请在重启后运行serverspeeder-all.sh脚本 \033[0m,进行安装锐速加速"
 echo "可以使用service ssr (start|stop|restart) 来操作ssrwc"
 echo "直接使用ip地址访问web控制"
 echo "欢迎纠正错误，git地址：https://github.com/Hepc622/ssrwc.git"
