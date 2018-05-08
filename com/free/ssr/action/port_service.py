@@ -3,6 +3,7 @@
 
 from com.free.ssr.action.linux_option import Linux
 import com.free.ssr.utils.json_file_utils as jfileutl
+import shadowsocks.manager as manager
 
 from datetime import datetime
 
@@ -38,7 +39,7 @@ def save_update_port_info(dic=None):
         # 判断是修改还是添加
         port_password = load_dict.get("port_password")
         if not port_password:
-            add_port_info(dic, load_dict)
+            return add_port_info(dic, load_dict)
         else:
             exists = False
             # 通过id 获取对应的端口数据
@@ -47,9 +48,9 @@ def save_update_port_info(dic=None):
                     exists = True
                     break
             if exists:
-                update_port_info(dic, load_dict)
+               return update_port_info(dic, load_dict)
             else:
-                add_port_info(dic, load_dict)
+               return add_port_info(dic, load_dict)
     else:
         print("The dic that can`t be null")
 
@@ -98,7 +99,7 @@ def update_port_info(dic=None, load_dict=None):
     if password is not None:
         option_data["password"] = password
     if port is not None:
-        option_data["port"] = port
+        option_data["server_port"] = port
     if method is not None:
         option_data["method"] = method
     if protocol is not None:
@@ -124,8 +125,9 @@ def update_port_info(dic=None, load_dict=None):
             print("Update a rule of port,The origin:%s,The new:%s" %(old_port,port))
     # 更新到文件中去
     jfileutl.write_file(load_dict)
-    # 重启ssr
-    Linux.restart_ssr()
+    # 添加端口号
+    return manager.add_port(option_data)
+
 
 # 处理数据,将传过来的进行一一放入到json中
 def add_port_info(dic=None, load_dict=None):
@@ -171,7 +173,7 @@ def add_port_info(dic=None, load_dict=None):
     if password is not None:
         option_data["password"] = password
     if port is not None:
-        option_data["port"] = port
+        option_data["server_port"] = port
     if method is not None:
         option_data["method"] = method
     if protocol is not None:
@@ -197,8 +199,8 @@ def add_port_info(dic=None, load_dict=None):
 
     # 更新到文件中去
     jfileutl.write_file(load_dict)
-    # 重启ssr
-    Linux.restart_ssr()
+    # 添加端口号
+    return manager.add_port(option_data)
 
 # 让这个端口的使用日期过期
 def overdue_port_info(dic=None):
@@ -214,14 +216,13 @@ def overdue_port_info(dic=None):
                 port_password[port]['used']=port_password[port]['total']
                 port_password[port]['remain']=0
                 port_password[port]['endTm']=datetime.strftime(datetime.now(), "%Y-%m-%d")
+                manager.remove_port({'server_port':port})
                 break
         # 将指定端口墙了
         if Linux.delete_port([dic.get("port")]):
             pass
         # 更新到文件中去
         jfileutl.write_file(load_dict)
-        # 重启ssr
-        Linux.restart_ssr()
     else:
         print("The agr can`t be null")
 
@@ -237,13 +238,13 @@ def destroy_port_info(dic=None):
                 jfileutl.write_file_to_bak(port_password[port])
                 # 把它有效至为1就行
                 del port_password[port]
+                # 移除端口
+                manager.remove_port({'server_port':port})
                 break
         # 将指定端口墙了
         Linux.delete_port([dic.get("port")])
         # 更新到文件中去
         jfileutl.write_file(load_dict)
-        # 重启ssr
-        Linux.restart_ssr()
     else:
         print("The agr can`t be null")
 

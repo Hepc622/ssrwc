@@ -5,6 +5,7 @@ import com.free.ssr.action.port_service as port_service
 import com.free.ssr.utils.json_file_utils as jfileutl
 
 from com.free.ssr.action.linux_option import Linux
+import shadowsocks.manager as manager
 
 
 # 每天0点检查该服务器的所有端口的有效期,如果过期了,需要将这个端口给墙了
@@ -17,8 +18,10 @@ def validate_dealine(self):
         print("The overdue ports %s" %(overdue,))
         # 将这些端口墙了
         Linux.delete_port(overdue)
-        # 重启ssr
-        Linux.restart_ssr()
+    for port in overdue:
+        # 移除端口
+        manager.remove_port({'server_port':port})
+        
 
 # 统计每一个端口的流量,10分钟执行一次
 def count_flow():
@@ -49,15 +52,12 @@ def count_flow():
             if remain <= 0:
                 # 将标志至为无效
                 port_data['flowMark'] = 1
-                # 这里不能把端口给墙了只能去重启一下ssr让他重新读取一下配置文件,因为只是流量超出了,而不是过期了
-                reboot_ssr = True
+                # 移除流量超标的端口
+                manager.remove_port({'server_port':port})
 
-	# 判断是否需要重启ssr
-    if reboot_ssr:
-        print("have some customer flow out of the total,need restart the ssr software,The user info:%s" % (ssrj,))
-        jfileutl.write_file(ssrj)
-        # 重启ssr
-        Linux.restart_ssr()
+    print("have some customer flow out of the total,need restart the ssr software,The user info:%s" % (ssrj,))
+    jfileutl.write_file(ssrj)
+    
 
 # 每个月的1号0点清除所有的流量
 def clear_port_flow():

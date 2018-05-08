@@ -21,7 +21,16 @@ fun_stop(){
 	# 杀死app这个进程
 	eval $(ps -ef | grep "[0-9] python app.py" | awk '{print "kill "$2}')
 	# 杀死监听80端口的进程
-	eval $(netstat -anp |grep ':80'| awk '{print($NF)}'| awk -F '/' '{print "kill -9 "$1}')
+	eval $(netstat -anp |grep ':80'| awk '{print($NF)}'| awk -F '/' '{print "kill "$1}')
+}
+fun_status(){
+	result=$(netstat -anp |grep ':80'| awk '{print($NF)}'| awk -F '/' '{print $2}')
+	if [ $result = 'python' ]
+	then
+		echo "This ssr_web is running"
+	else
+		echo "This ssr_web is stop"
+	fi
 }
 
 
@@ -40,13 +49,7 @@ case $1 in
 		fun_start
 	;;
 	status)
-		result=netstat -anp |grep ':80'| awk '{print($NF)}'| awk -F '/' '{print $2}'
-		if [ $result = 'python' ]
-		then
-			echo "This ssr_web is running"
-		else
-			echo "This ssr_web is stop"
-		fi
+		fun_status
 	;;
 esac
 exit 0

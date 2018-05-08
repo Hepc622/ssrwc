@@ -12,8 +12,8 @@ class Linux:
 		for port in ports:
 			if Linux.check_ports_open([port]) is not True:
 				# 添加tcp port
-				command = "iptables -I INPUT -p tcp --dport %s -m connlimit --connlimit-above 1 -j ACCEPT && " \
-				 		  "iptables -I INPUT -p udp --dport %s -m connlimit --connlimit-above 1 -j ACCEPT && " \
+				command = "iptables -I INPUT -p tcp --dport %s -m connlimit --connlimit-above 1 -j REJECT && " \
+				 		  "iptables -I INPUT -p udp --dport %s -m connlimit --connlimit-above 1 -j REJECT && " \
 				 		  "iptables -I OUTPUT -p tcp --sport %s -j ACCEPT && " \
 						  "iptables -I OUTPUT -p udp --sport %s -j ACCEPT" \
 						  %(port, port, port, port)
