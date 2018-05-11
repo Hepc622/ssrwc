@@ -6,12 +6,15 @@
 # 2345指脚本运行级别，234为文本界面，5为图形界面，60为脚本启动的次序号，20为脚本停止
 
 
-
+SSR_HOME=/usr/local/ssr/shadowsocks
 # 开始
 fun_start(){
 	cd /usr/local/ssr/
 	# 运行web
 	python app.py >> ssr_web.log 2>&1 &
+	# 启动ssr
+	cd $SSR_HOME
+	sh $SSR_HOME/run.sh 
 }
 fun_stop(){
 	# eval 用来执行这个打印出来的命令
@@ -21,7 +24,19 @@ fun_stop(){
 	# 杀死app这个进程
 	eval $(ps -ef | grep "[0-9] python app.py" | awk '{print "kill "$2}')
 	# 杀死监听80端口的进程
-	eval $(netstat -anp |grep ':80'| awk '{print($NF)}'| awk -F '/' '{print "kill -9 "$1}')
+	eval $(netstat -anp |grep ':80'| awk '{print($NF)}'| awk -F '/' '{print "kill "$1}')
+	# 杀死ssr的所有启动经常
+	cd $SSR_HOME
+	sh $SSR_HOME/stop.sh 
+}
+fun_status(){
+	result=$(netstat -anp |grep ':80'| awk '{print($NF)}'| awk -F '/' '{print $2}')
+	if [ $result = 'python' ]
+	then
+		echo "This ssr_web is running"
+	else
+		echo "This ssr_web is stop"
+	fi
 }
 
 
@@ -40,13 +55,7 @@ case $1 in
 		fun_start
 	;;
 	status)
-		result=netstat -anp |grep ':80'| awk '{print($NF)}'| awk -F '/' '{print $2}'
-		if [ $result = 'python' ]
-		then
-			echo "This ssr_web is running"
-		else
-			echo "This ssr_web is stop"
-		fi
+		fun_status
 	;;
 esac
 exit 0
