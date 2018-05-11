@@ -101,40 +101,24 @@ if [[ ${OS} == Ubuntu || ${OS} == Debian ]];then
 #     cd /etc/init.d
     # `dirname $0` 得到当前目录的父级目录
     # parent=`dirname $0`
-    # 切换到目录
-    cd /usr/local/ssr/shadowsocks/
-    # 建立一个硬连接
-    ln ./ssr /etc/init.d/
-    # 修改权限
-    chmod 755 ssr
-    update-rc.d ssr defaults 95
     cd /usr/local/ssr/
     # 建立一个硬连接
-    ln ./ssrWeb /etc/init.d/
+    ln ./ssrwc /etc/init.d/
     # 修改权限
-    chmod 755 ssrWeb
-    update-rc.d ssrWeb defaults 95
+    chmod 755 ssrwc
+    update-rc.d ssrwc defaults 95
 fi
 
 if [[ ${OS} == CentOS ]];then
    # 切换到目录
-   cd /usr/local/ssr/shadowsocks/
-   # 建立一个硬连接
-   ln ./ssr /etc/init.d/
-   # 修改权限
-   chmod 755 ssr
-   # 添加到开机自启
-   chkconfig ssr on
-   chkconfig --add ssr
-   # 切换到目录
    cd /usr/local/ssr/
    # 建立一个硬连接
-   ln ./ssrWeb /etc/init.d/
+   ln ./ssrwc /etc/init.d/
    # 修改权限
-   chmod 755 ssrWeb
+   chmod 755 ssrwc
    # 添加到开机自启
-   chkconfig ssrWeb on
-   chkconfig --add ssrWeb
+   chkconfig ssrwc on
+   chkconfig --add ssrwc
 fi
 
 
