@@ -168,6 +168,6 @@ class Linux:
 	# 重启ssr
 	@staticmethod
 	def restart_ssr():
-		command = "service ssr restart"
+		command = "service ssrwc restart"
 		print("restart the ssr:%s" %(command))
 		return len(os.popen(command).readlines()) == 0
