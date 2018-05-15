@@ -107,6 +107,13 @@ if [[ ${OS} == Ubuntu || ${OS} == Debian ]];then
     # 修改权限
     chmod 755 ssrwc
     update-rc.d ssrwc defaults 95
+
+    cd /usr/local/ssr/shadowsocks/
+    # 建立一个硬连接
+    ln ./ssr /etc/init.d/
+    # 修改权限
+    chmod 755 ssr
+    update-rc.d ssr defaults 95
 fi
 
 if [[ ${OS} == CentOS ]];then
@@ -119,6 +126,15 @@ if [[ ${OS} == CentOS ]];then
    # 添加到开机自启
    chkconfig ssrwc on
    chkconfig --add ssrwc
+
+  cd /usr/local/ssr/shadowsocks/
+   # 建立一个硬连接
+  ln ./ssr /etc/init.d/
+  # 修改权限
+  chmod 755 ssr
+  # 添加到开机自启
+  chkconfig ssr on
+  chkconfig --add ssr
 fi
 
 
@@ -178,6 +194,8 @@ fi
 
 # 启动ssr
 service ssr start
+# 启动ssrwc
+service ssrwc start
 echo -e "将系统内核更换至3.10.0-229\033[31m 请在重启后运行serverspeeder-all.sh脚本 \033[0m,进行安装锐速加速"
 echo "可以使用service ssr (start|stop|restart) 来操作ssrwc"
 echo "直接使用ip地址访问web控制"
