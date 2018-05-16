@@ -71,7 +71,7 @@ def update_port_info(dic=None, load_dict=None):
     # 修改对应数据
     userName = dic.get("userName")
     password = dic.get("password")
-    port = dic.get("port")
+    port = dic.get("server_port")
     method = dic.get("method")
     protocol = dic.get("protocol")
     obfs = dic.get("obfs")
@@ -140,7 +140,7 @@ def add_port_info(dic=None, load_dict=None):
     userId = dic.get("userId")
     userName = dic.get("userName")
     password = dic.get("password")
-    port = dic.get("port")
+    port = dic.get("server_port")
     method = dic.get("method")
     protocol = dic.get("protocol")
     obfs = dic.get("obfs")
@@ -215,7 +215,7 @@ def overdue_port_info(dic=None):
                 port_password[port]['endTm']=datetime.strftime(datetime.now(), "%Y-%m-%d")
                 break
         # 将指定端口墙了
-        if Linux.delete_port([dic.get("port")]):
+        if Linux.delete_port([dic.get("server_port")]):
             pass
         # 更新到文件中去
         jfileutl.write_file(load_dict)
@@ -236,7 +236,7 @@ def destroy_port_info(dic=None):
                 del port_password[port]
                 break
         # 将指定端口墙了
-        Linux.delete_port([dic.get("port")])
+        Linux.delete_port([dic.get("server_port")])
         # 更新到文件中去
         jfileutl.write_file(load_dict)
     else:
