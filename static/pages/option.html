@@ -100,6 +100,10 @@
                     <input type="text" name="limit" placeholder="请输入流量" class="layui-input">
                 </div>
                 <div class="layui-form-mid layui-word-aux">KB为单位</div>
+                <label class="layui-form-label">链接数</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="client" placeholder="请输可连接的客户端数" lay-verify="number" class="layui-input">
+                </div>
             </div>
             <!--流量总量-->
             <div class="layui-form-item">
@@ -179,6 +183,7 @@
                 ,{field: 'password', title: '密码', width:80}
                 ,{field: 'flowMark', title: '是否有流量', width:120,templet:'<div>{{ utl.formatFlow(d.flowMark)}}</div>'}
                 ,{field: 'dateMark', title: '是否过期', width:120,templet:'<div>{{ utl.formatDeadlineLine(d.dateMark)}}</div>'}
+                ,{field: 'client',title:'可连接的客户端数', width:80, sort: true}
                 ,{field: 'server_port', title: '端口', width:80, sort: true}
                 ,{field: 'method', title: '加密方式', width: 150}
                 ,{field: 'protocol', title: '协议', width: 150, sort: true}
