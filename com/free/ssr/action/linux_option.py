@@ -42,12 +42,12 @@ class Linux:
 		in_num = os.popen(command).readlines()
 		# 执行删除INPUT链命令
 		for num in out_num:
-			command = "iptebles -D INPUT %s" %(num)
+			command = "iptables -D INPUT %s" %(num)
 			if Linux.ckcomsuccess(os.popen(command).readlines(),command):
 				print("remove success")
 		# 执行删除OUTPUT链命令
 		for num in in_num:
-			command = "iptebles -D OUTPUT %s" %(num)
+			command = "iptables -D OUTPUT %s" %(num)
 			if Linux.ckcomsuccess(os.popen(command).readlines(),command):
 				print("remove success")
 		# 保存新修改的规则
