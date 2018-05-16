@@ -31,8 +31,8 @@ class Linux:
 		out_ = ""
 		in_ = ""
 		for port in ports:
-			out_+='dpt: %s|'% (port)
-			in_+='spt: %s|'% (port)
+			out_+='dpt:%s|'% (port)
+			in_+='spt:%s|'% (port)
 
 		# 获取output每一个要删除的序号
 		command = "iptables -L -n --line|grep -E '%s'|awk '{print($1)}'"%(out_[0:-1])
