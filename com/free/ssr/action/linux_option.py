@@ -12,8 +12,8 @@ class Linux:
 		for port in ports:
 			if Linux.check_ports_open([port]) is not True:
 				# 添加tcp port
-				command = "iptables -I INPUT -p tcp --dport %s -m connlimit --connlimit-above 1 -j ACCEPT && " \
-				 		  "iptables -I INPUT -p udp --dport %s -m connlimit --connlimit-above 1 -j ACCEPT && " \
+				command = "iptables -I INPUT -p tcp --dport %s -m connlimit --connlimit-above 1 -j REJECT && " \
+				 		  "iptables -I INPUT -p udp --dport %s -m connlimit --connlimit-above 1 -j REJECT && " \
 				 		  "iptables -I OUTPUT -p tcp --sport %s -j ACCEPT && " \
 						  "iptables -I OUTPUT -p udp --sport %s -j ACCEPT" \
 						  %(port, port, port, port)
@@ -21,8 +21,9 @@ class Linux:
 				# 检查是否成功
 				if Linux.ckcomsuccess(os.popen(command).readlines(),command):
 					print("Insert success")
-				# 保存新修改的规则
-				return Linux.save_rules()
+		# 保存新修改的规则
+		Linux.save_rules()
+		Linux.restart_ssr()
 
 	# 移除一个或多个端口
 	@staticmethod
@@ -50,7 +51,8 @@ class Linux:
 			if Linux.ckcomsuccess(os.popen(command).readlines(),command):
 				print("remove success")
 		# 保存新修改的规则
-		return Linux.save_rules()
+		Linux.save_rules()
+		Linux.restart_ssr()
 
 	# 更新端口
 	@staticmethod
@@ -168,6 +170,6 @@ class Linux:
 	# 重启ssr
 	@staticmethod
 	def restart_ssr():
-		command = "service ssrwc restart"
+		command = "service ssr restart"
 		print("restart the ssr:%s" %(command))
 		return len(os.popen(command).readlines()) == 0
