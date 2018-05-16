@@ -39,22 +39,22 @@ def query():
 @sa.route("/saveOrUpdate", methods=['POST'])
 def saveOrUpdate():
     dic = deal_form()
-    port_service.save_update_port_info(dic)
-    return Result(code=0, message='修改成功').get_json()
+    result = port_service.save_update_port_info(dic)
+    return Result(code=0, message=result).get_json()
 
 
 # 指定的数据过期
 @sa.route("/overdue", methods=["POST"])
 def overdue():
-    port_service.overdue_port_info(request.form)
-    return Result(code=0, message='这个数据已过期').get_json()
+    result = port_service.overdue_port_info(request.form)
+    return Result(code=0, message=result).get_json()
 
 
-# 指定的数据过期
+# 指定的数据删除
 @sa.route("/destroy", methods=["POST"])
 def destroy():
-    port_service.destroy_port_info(request.form)
-    return Result(code=0, message='销毁成功').get_json()
+    result = port_service.destroy_port_info(request.form)
+    return Result(code=0, message=result).get_json()
 
 
 # 处理表单数据
@@ -66,7 +66,7 @@ def deal_form():
     userName = request.form.get("userName")
     password = request.form.get("password")
     method = request.form.get("method")
-    port = request.form.get("port")
+    port = request.form.get("server_port")
     protocol = request.form.get("protocol")
     obfs = request.form.get("obfs")
     limit = request.form.get("limit")
@@ -89,7 +89,7 @@ def deal_form():
     result['userName'] = userName
     result['password'] = password
     result['method'] = method
-    result['port'] = port
+    result['server_port'] = port
     result['protocol'] = protocol
     result['obfs'] = obfs
     result['limit'] = limit
