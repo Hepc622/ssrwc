@@ -124,6 +124,7 @@ def update_port_info(dic=None, load_dict=None):
             print("Update a rule of port,The origin:%s,The new:%s" %(old_port,port))
     # 更新到文件中去
     jfileutl.write_file(load_dict)
+    Linux.restart_ssr()
     
 
 
