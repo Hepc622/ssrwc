@@ -55,6 +55,7 @@ def save_update_port_info(dic=None):
 
 # 修改数据
 def update_port_info(dic=None, load_dict=None):
+    print(dic)
     # 去除所有的端口数据
     port_password = load_dict.get("port_password")
     # 要操作数据
@@ -71,6 +72,7 @@ def update_port_info(dic=None, load_dict=None):
     # 修改对应数据
     userName = dic.get("userName")
     password = dic.get("password")
+    client = dic.get("client")
     port = dic.get("server_port")
     method = dic.get("method")
     protocol = dic.get("protocol")
@@ -101,6 +103,8 @@ def update_port_info(dic=None, load_dict=None):
         option_data["server_port"] = port
     if method is not None:
         option_data["method"] = method
+    if client is not None:
+        option_data["client"] = client
     if protocol is not None:
         option_data["protocol"] = protocol
     if obfs is not None:
@@ -141,6 +145,7 @@ def add_port_info(dic=None, load_dict=None):
     userId = dic.get("userId")
     userName = dic.get("userName")
     password = dic.get("password")
+    client = dic.get("client")
     port = dic.get("server_port")
     method = dic.get("method")
     protocol = dic.get("protocol")
@@ -167,6 +172,8 @@ def add_port_info(dic=None, load_dict=None):
         option_data["id"] = id
     if userId is not None:
         option_data["userId"] = userId
+    if client is not None:
+        option_data["client"] = client
     if userName is not None:
         option_data["userName"] = userName
     if password is not None:
@@ -193,7 +200,7 @@ def add_port_info(dic=None, load_dict=None):
     # 重新设置到字典中去
     port_password[port] = option_data
     # 判断端口是否改变
-    if Linux.add_port([port]):
+    if Linux.add_port(option_data):
         print("Insert a rule of port:%s" %(port))
 
     # 更新到文件中去
