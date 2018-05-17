@@ -8,19 +8,20 @@ class Linux:
 
 	# 给防火墙添加一个或多个放行端口
 	@staticmethod
-	def add_port(ports):
-		for port in ports:
-			if Linux.check_ports_open([port]) is not True:
-				# 添加tcp port
-				command = "iptables -I INPUT -p tcp --dport %s -m connlimit --connlimit-above 1 -j REJECT && " \
-				 		  "iptables -I INPUT -p udp --dport %s -m connlimit --connlimit-above 1 -j REJECT && " \
-				 		  "iptables -I OUTPUT -p tcp --sport %s -j ACCEPT && " \
-						  "iptables -I OUTPUT -p udp --sport %s -j ACCEPT" \
-						  %(port, port, port, port)
-				print("Insert the port to a firewall,excute command: %s" %(command,))
-				# 检查是否成功
-				if Linux.ckcomsuccess(os.popen(command).readlines(),command):
-					print("Insert success")
+	def add_port(dic):
+		port = dic.get("server_port")
+		client = dic.get("client",1)
+		if Linux.check_ports_open([port]) is not True:
+			# 添加tcp
+			command = "iptables -I INPUT -p tcp --dport %s -j ACCEPT && " \
+			 		  "iptables -I INPUT -p udp --dport %s -j ACCEPT && " \
+			 		  "iptables -I OUTPUT -p tcp --sport %s -j ACCEPT && " \
+					  "iptables -I OUTPUT -p udp --sport %s -j ACCEPT" \
+					  %(port, port, port, port)
+			print("Insert the port to a firewall,excute command: %s" %(command,))
+			# 检查是否成功
+			if Linux.ckcomsuccess(os.popen(command).readlines(),command):
+				print("Insert success")
 		# 保存新修改的规则
 		Linux.save_rules()
 		Linux.restart_ssr()
@@ -173,3 +174,5 @@ class Linux:
 		command = "service ssr restart"
 		print("restart the ssr:%s" %(command))
 		return len(os.popen(command).readlines()) == 0
+if __name__ == '__main__':
+	Linux.delete_port([1223,4444,9999])
