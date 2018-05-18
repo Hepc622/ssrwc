@@ -30,7 +30,7 @@ from shadowsocks import common, eventloop, tcprelay, udprelay, asyncdns, shell
 
 BUF_SIZE = 1506
 STAT_SEND_LIMIT = 50
-manager = None
+
 
 class Manager(object):
 
@@ -41,74 +41,41 @@ class Manager(object):
         self._dns_resolver = asyncdns.DNSResolver()
         self._dns_resolver.add_to_loop(self._loop)
 
-        port_password = config['port_password']
-        # 删除port_password这个数据
-        del config['port_password']
-        for port, password_obfs in port_password.items():
-            # 默认参数
-            # 加密方式
-            method = config.get("method", 'aes-256-cfb')
-            # 用户密码
-            password = config.get("password", 'password')
-            # 协议加密
-            protocol = config.get("protocol", 'origin')
-            # 混淆方式
-            obfs = config.get("obfs","plain")
-            # 获取混淆参数
-            obfs_param = config.get("obfs_param", '')
-            # 判断是否是一个数组，格式如下
-            """ 
-            port_password:{
-                port:['password','obfs'],
-                port:['password','obfs'],
-                ....
-            }
-            """
-            if type(password_obfs) == list:
-                password = password_obfs[0]
-                obfs = password_obfs[1]
-            elif type(password_obfs) == dict:
-                # 字典的情况下,格式如下
-                """ 
-                port_password:{
-                    port:{
-                        password:password,
-                        protocol:protocol,
-                        obfs:obfs,
-                        obfs_param:obfs_param
-                    },
-                    ....
-                }
-                """
-                # 如果是1的话表示无效的状态0表示正常
-                if password_obfs.get("flowMark",0) == 1 or password_obfs.get("dateMark",0) == 1:
-                    continue
-                # 密码
-                password = password_obfs.get('password', 'm')
-                # 协议
-                protocol = password_obfs.get('protocol', 'origin')
-                # 协议参数
-                protocol_param = password_obfs.get('protocol_param', '')
-                # 混淆方式
-                obfs = password_obfs.get('obfs', 'plain')
-                # 混淆参数
-                obfs_param = password_obfs.get('obfs_param', '')
-                # 获取加密方式
-                method = password_obfs.get("method", 'aes-256-cfb')
+        self._statistics = collections.defaultdict(int)
+        self._control_client_addr = None
+        try:
+            manager_address = common.to_str(config['manager_address'])
+            if ':' in manager_address:
+                addr = manager_address.rsplit(':', 1)
+                addr = addr[0], int(addr[1])
+                addrs = socket.getaddrinfo(addr[0], addr[1])
+                if addrs:
+                    family = addrs[0][0]
+                else:
+                    logging.error('invalid address: %s', manager_address)
+                    exit(1)
             else:
-                password = password_obfs
-                obfs = config["obfs"]
-            a_config = config.copy()
-            a_config['server_port'] = port
-            a_config['password'] = password
-            a_config['protocol'] = protocol
-            a_config['protocol_param'] = protocol_param
-            a_config['obfs'] = obfs
-            a_config['obfs_param'] = obfs_param
-            a_config['method'] = method
-            # 覆盖a_config
-            self.add_port(a_config)
+                addr = manager_address
+                family = socket.AF_UNIX
+            self._control_socket = socket.socket(family,
+                                                 socket.SOCK_DGRAM)
+            self._control_socket.bind(addr)
+            self._control_socket.setblocking(False)
+        except (OSError, IOError) as e:
+            logging.error(e)
+            logging.error('can not bind to manager address')
+            exit(1)
+        self._loop.add(self._control_socket,
+                       eventloop.POLL_IN, self)
+        self._loop.add_periodic(self.handle_periodic)
 
+        port_password = config['port_password']
+        del config['port_password']
+        for port, password in port_password.items():
+            a_config = config.copy()
+            a_config['server_port'] = int(port)
+            a_config['password'] = password
+            self.add_port(a_config)
 
     def add_port(self, config):
         port = int(config['server_port'])
@@ -116,19 +83,15 @@ class Manager(object):
         if servers:
             logging.error("server already exists at %s:%d" % (config['server'],
                                                               port))
-            # 端口存在返回false启动失败
-            return "添加失败,端口已经存在！"
+            return
         logging.info("adding server at %s:%d" % (config['server'], port))
         t = tcprelay.TCPRelay(config, self._dns_resolver, False,
-                              self.stat_callback)
+                              stat_callback=self.stat_callback)
         u = udprelay.UDPRelay(config, self._dns_resolver, False,
-                              self.stat_callback)
+                              stat_callback=self.stat_callback)
         t.add_to_loop(self._loop)
         u.add_to_loop(self._loop)
         self._relays[port] = (t, u)
-        if t and u :
-            # 添加成功
-            return "添加成功！"
 
     def remove_port(self, config):
         port = int(config['server_port'])
@@ -139,13 +102,9 @@ class Manager(object):
             t.close(next_tick=False)
             u.close(next_tick=False)
             del self._relays[port]
-            # 移除成功
-            return "端口移除成功"
         else:
             logging.error("server not exist at %s:%d" % (config['server'],
                                                          port))
-            # 移除失败，端口未启动
-            return "端口移除失败,端口未启动！"
 
     def handle_event(self, sock, fd, event):
         if sock == self._control_socket and event == eventloop.POLL_IN:
@@ -232,7 +191,7 @@ class Manager(object):
 
 
 def run(config):
-   manager = Manager(config).run()
+    Manager(config).run()
 
 
 def test():
@@ -248,7 +207,9 @@ def test():
     eventloop.TIMEOUT_PRECISION = 1
 
     def run_server():
-        config = {
+        config = shell.get_config(True)
+        config = config.copy()
+        a_config = {
             'server': '127.0.0.1',
             'local_port': 1081,
             'port_password': {
@@ -261,6 +222,7 @@ def test():
             'fast_open': False,
             'verbose': 2
         }
+        config.update(a_config)
         manager = Manager(config)
         enc.append(manager)
         manager.run()
