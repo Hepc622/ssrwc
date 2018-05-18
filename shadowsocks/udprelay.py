@@ -204,7 +204,7 @@ class UDPRelay(object):
         else:
             self._forbidden_portset = None
 
-        addrs = socket.getaddrinfo(self._listen_addr, self._listen_port, 0,
+        addrs = socket.getaddrinfo(self._listen_addr, int(self._listen_port), 0,
                                    socket.SOCK_DGRAM, socket.SOL_UDP)
         if len(addrs) == 0:
             raise Exception("can't get addrinfo for %s:%d" %
