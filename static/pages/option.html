@@ -78,9 +78,10 @@
                     <select name="protocol" lay-verify="required">
                         <option value="">请选择协议</option>
                         <option value="origin">origin</option>
+                        <option value="auth_sha1_v4">auth_sha1_v4</option>
                         <option value="auth_sha1_v4_compatible">auth_sha1_v4_compatible</option>
-                        <option value="auth_aes128_sha1_compatible">auth_aes128_sha1_compatible</option>
-                        <option value="auth_aes128_md5_compatible">auth_aes128_md5_compatible</option>
+                        <option value="auth_aes128_sha1">auth_aes128_sha1</option>
+                        <option value="auth_aes128_md5">auth_aes128_md5</option>
                     </select>
                 </div>
                 <label class="layui-form-label">混淆方式</label>
@@ -88,7 +89,9 @@
                     <select name="obfs" lay-verify="required">
                         <option value="">请选择</option>
                         <option value="plain">plain</option>
+                        <option value="http_simple">http_simple</option>
                         <option value="http_simple_compatible">http_simple_compatible</option>
+                        <option value="tls1.2_ticket_auth">tls1.2_ticket_auth</option>
                         <option value="tls1.2_ticket_auth_compatible">tls1.2_ticket_auth_compatible</option>
                     </select>
                 </div>
