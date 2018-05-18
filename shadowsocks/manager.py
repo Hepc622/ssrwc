@@ -30,7 +30,7 @@ from shadowsocks import common, eventloop, tcprelay, udprelay, asyncdns, shell
 
 BUF_SIZE = 1506
 STAT_SEND_LIMIT = 50
-
+manager = None
 
 class Manager(object):
 
@@ -232,7 +232,7 @@ class Manager(object):
 
 
 def run(config):
-    Manager(config).run()
+   manager = Manager(config).run()
 
 
 def test():

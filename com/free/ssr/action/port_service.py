@@ -55,7 +55,6 @@ def save_update_port_info(dic=None):
 
 # 修改数据
 def update_port_info(dic=None, load_dict=None):
-    print(dic)
     # 去除所有的端口数据
     port_password = load_dict.get("port_password")
     # 要操作数据
@@ -128,9 +127,8 @@ def update_port_info(dic=None, load_dict=None):
             print("Update a rule of port,The origin:%s,The new:%s" %(old_port,port))
     # 更新到文件中去
     jfileutl.write_file(load_dict)
+    # 重启ssr
     Linux.restart_ssr()
-    
-
 
 # 处理数据,将传过来的进行一一放入到json中
 def add_port_info(dic=None, load_dict=None):
@@ -145,7 +143,7 @@ def add_port_info(dic=None, load_dict=None):
     userId = dic.get("userId")
     userName = dic.get("userName")
     password = dic.get("password")
-    client = dic.get("client",1)
+    client = dic.get("client")
     port = dic.get("server_port")
     method = dic.get("method")
     protocol = dic.get("protocol")
@@ -174,8 +172,6 @@ def add_port_info(dic=None, load_dict=None):
         option_data["userId"] = userId
     if client is not None:
         option_data["client"] = client
-    if limit is not None:
-        option_data["limit"] = limit
     if userName is not None:
         option_data["userName"] = userName
     if password is not None:
@@ -207,7 +203,8 @@ def add_port_info(dic=None, load_dict=None):
 
     # 更新到文件中去
     jfileutl.write_file(load_dict)
-    
+    # 重启ssr
+    Linux.restart_ssr()
 
 # 让这个端口的使用日期过期
 def overdue_port_info(dic=None):
@@ -229,6 +226,8 @@ def overdue_port_info(dic=None):
             pass
         # 更新到文件中去
         jfileutl.write_file(load_dict)
+        # 重启ssr
+        Linux.restart_ssr()
     else:
         print("The agr can`t be null")
 
@@ -249,6 +248,8 @@ def destroy_port_info(dic=None):
         Linux.delete_port([dic.get("server_port")])
         # 更新到文件中去
         jfileutl.write_file(load_dict)
+        # 重启ssr
+        Linux.restart_ssr()
     else:
         print("The agr can`t be null")
 

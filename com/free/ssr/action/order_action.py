@@ -39,22 +39,22 @@ def query():
 @sa.route("/saveOrUpdate", methods=['POST'])
 def saveOrUpdate():
     dic = deal_form()
-    result = port_service.save_update_port_info(dic)
-    return Result(code=0, message=result).get_json()
+    port_service.save_update_port_info(dic)
+    return Result(code=0, message='修改成功').get_json()
 
 
 # 指定的数据过期
 @sa.route("/overdue", methods=["POST"])
 def overdue():
-    result = port_service.overdue_port_info(request.form)
-    return Result(code=0, message=result).get_json()
+    port_service.overdue_port_info(request.form)
+    return Result(code=0, message='这个数据已过期').get_json()
 
 
-# 指定的数据删除
+# 指定的数据过期
 @sa.route("/destroy", methods=["POST"])
 def destroy():
-    result = port_service.destroy_port_info(request.form)
-    return Result(code=0, message=result).get_json()
+    port_service.destroy_port_info(request.form)
+    return Result(code=0, message='销毁成功').get_json()
 
 
 # 处理表单数据
