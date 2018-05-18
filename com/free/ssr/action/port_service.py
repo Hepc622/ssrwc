@@ -3,7 +3,6 @@
 
 from com.free.ssr.action.linux_option import Linux
 import com.free.ssr.utils.json_file_utils as jfileutl
-import shadowsocks.manager as manager
 
 from datetime import datetime
 
@@ -56,6 +55,7 @@ def save_update_port_info(dic=None):
 
 # 修改数据
 def update_port_info(dic=None, load_dict=None):
+    print(dic)
     # 去除所有的端口数据
     port_password = load_dict.get("port_password")
     # 要操作数据
@@ -72,7 +72,8 @@ def update_port_info(dic=None, load_dict=None):
     # 修改对应数据
     userName = dic.get("userName")
     password = dic.get("password")
-    port = dic.get("port")
+    client = dic.get("client")
+    port = dic.get("server_port")
     method = dic.get("method")
     protocol = dic.get("protocol")
     obfs = dic.get("obfs")
@@ -102,6 +103,8 @@ def update_port_info(dic=None, load_dict=None):
         option_data["server_port"] = port
     if method is not None:
         option_data["method"] = method
+    if client is not None:
+        option_data["client"] = client
     if protocol is not None:
         option_data["protocol"] = protocol
     if obfs is not None:
@@ -125,8 +128,8 @@ def update_port_info(dic=None, load_dict=None):
             print("Update a rule of port,The origin:%s,The new:%s" %(old_port,port))
     # 更新到文件中去
     jfileutl.write_file(load_dict)
-    # 添加端口号
-    return manager.add_port(option_data)
+    Linux.restart_ssr()
+    
 
 
 # 处理数据,将传过来的进行一一放入到json中
@@ -142,7 +145,8 @@ def add_port_info(dic=None, load_dict=None):
     userId = dic.get("userId")
     userName = dic.get("userName")
     password = dic.get("password")
-    port = dic.get("port")
+    client = dic.get("client",1)
+    port = dic.get("server_port")
     method = dic.get("method")
     protocol = dic.get("protocol")
     obfs = dic.get("obfs")
@@ -168,6 +172,10 @@ def add_port_info(dic=None, load_dict=None):
         option_data["id"] = id
     if userId is not None:
         option_data["userId"] = userId
+    if client is not None:
+        option_data["client"] = client
+    if limit is not None:
+        option_data["limit"] = limit
     if userName is not None:
         option_data["userName"] = userName
     if password is not None:
@@ -194,13 +202,12 @@ def add_port_info(dic=None, load_dict=None):
     # 重新设置到字典中去
     port_password[port] = option_data
     # 判断端口是否改变
-    if Linux.add_port([port]):
+    if Linux.add_port(option_data):
         print("Insert a rule of port:%s" %(port))
 
     # 更新到文件中去
     jfileutl.write_file(load_dict)
-    # 添加端口号
-    return manager.add_port(option_data)
+    
 
 # 让这个端口的使用日期过期
 def overdue_port_info(dic=None):
@@ -216,10 +223,9 @@ def overdue_port_info(dic=None):
                 port_password[port]['used']=port_password[port]['total']
                 port_password[port]['remain']=0
                 port_password[port]['endTm']=datetime.strftime(datetime.now(), "%Y-%m-%d")
-                manager.remove_port({'server_port':port})
                 break
         # 将指定端口墙了
-        if Linux.delete_port([dic.get("port")]):
+        if Linux.delete_port([dic.get("server_port")]):
             pass
         # 更新到文件中去
         jfileutl.write_file(load_dict)
@@ -238,11 +244,9 @@ def destroy_port_info(dic=None):
                 jfileutl.write_file_to_bak(port_password[port])
                 # 把它有效至为1就行
                 del port_password[port]
-                # 移除端口
-                manager.remove_port({'server_port':port})
                 break
         # 将指定端口墙了
-        Linux.delete_port([dic.get("port")])
+        Linux.delete_port([dic.get("server_port")])
         # 更新到文件中去
         jfileutl.write_file(load_dict)
     else:

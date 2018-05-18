@@ -6,12 +6,13 @@
 # 2345指脚本运行级别，234为文本界面，5为图形界面，60为脚本启动的次序号，20为脚本停止
 
 
-
+SSR_HOME=/usr/local/ssr/shadowsocks
 # 开始
 fun_start(){
 	cd /usr/local/ssr/
 	# 运行web
 	python app.py >> ssr_web.log 2>&1 &
+	
 }
 fun_stop(){
 	# eval 用来执行这个打印出来的命令

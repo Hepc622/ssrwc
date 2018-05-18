@@ -54,13 +54,19 @@ var utl = {
         }
 
     },
-    formatMark:function(val){
+    formatFlow:function(val){
         if(val == '1'){
             return '否'
         }else if(val == '0'){
             return '是'
-        }else{
+        }
+    },
+    formatDeadlineLine:function(val){
+        if(val == '0'){
             return '否'
+        }else if(val == '1'){
+            return '是'
         }
     }
+
 }

@@ -66,7 +66,8 @@ def deal_form():
     userName = request.form.get("userName")
     password = request.form.get("password")
     method = request.form.get("method")
-    port = request.form.get("port")
+    client = request.form.get("client")
+    port = request.form.get("server_port")
     protocol = request.form.get("protocol")
     obfs = request.form.get("obfs")
     limit = request.form.get("limit")
@@ -89,7 +90,8 @@ def deal_form():
     result['userName'] = userName
     result['password'] = password
     result['method'] = method
-    result['port'] = port
+    result['client'] = client
+    result['server_port'] = port
     result['protocol'] = protocol
     result['obfs'] = obfs
     result['limit'] = limit
