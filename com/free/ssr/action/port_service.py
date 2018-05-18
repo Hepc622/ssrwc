@@ -79,6 +79,7 @@ def update_port_info(dic=None, load_dict=None):
     limit = dic.get("limit")
     remain = dic.get("remain")
     total = dic.get("total")
+    used = dic.get("used")
     # 判断是否需要更改有效标识
     beginTm = dic.get("beginTm")
     endTm = dic.get("endTm")
@@ -108,8 +109,17 @@ def update_port_info(dic=None, load_dict=None):
         option_data["protocol"] = protocol
     if obfs is not None:
         option_data["obfs"] = obfs
+    if limit is not None:
+        option_data["limit"] = limit
+
     if total is not None:
         option_data["total"] = int(total)
+        if remain is not None:
+            option_data["remain"] = int(total)-int(used) if int(total)-int(used) > 0 else 0
+        if used is not None:
+            option_data["used"] = int(total)-int(option_data["remain"]) if int(total)-int(option_data["remain"]) \
+                                                                           > 0 else 0
+
     if beginTm is not None:
         option_data["beginTm"] = beginTm
     if total is not None:
@@ -182,6 +192,8 @@ def add_port_info(dic=None, load_dict=None):
         option_data["method"] = method
     if protocol is not None:
         option_data["protocol"] = protocol
+    if limit is not None:
+        option_data["limit"] = limit
     if obfs is not None:
         option_data["obfs"] = obfs
     if remain is not None:

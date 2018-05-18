@@ -151,9 +151,6 @@ class Linux:
 			# 打印错误信息和执行命令
 			print("The command excute Erro:%s" %(reason,))
 			return False
-	# 限制流量
-	def limit_flow():
-		pass
 	# 重启锐速
 	@staticmethod
 	def start_serverSpeeder():
