@@ -802,7 +802,7 @@ class TCPRelay(object):
             listen_port = config['server_port']
         self._listen_port = listen_port
 
-        addrs = socket.getaddrinfo(listen_addr, listen_port, 0,
+        addrs = socket.getaddrinfo(listen_addr, int(listen_port), 0,
                                    socket.SOCK_STREAM, socket.SOL_TCP)
         if len(addrs) == 0:
             raise Exception("can't get addrinfo for %s:%d" %
