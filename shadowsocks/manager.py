@@ -86,9 +86,9 @@ class Manager(object):
             return
         logging.info("adding server at %s:%d" % (config['server'], port))
         t = tcprelay.TCPRelay(config, self._dns_resolver, False,
-                              stat_callback=self.stat_callback)
+                              self.stat_callback)
         u = udprelay.UDPRelay(config, self._dns_resolver, False,
-                              stat_callback=self.stat_callback)
+                              self.stat_callback)
         t.add_to_loop(self._loop)
         u.add_to_loop(self._loop)
         self._relays[port] = (t, u)
@@ -207,9 +207,7 @@ def test():
     eventloop.TIMEOUT_PRECISION = 1
 
     def run_server():
-        config = shell.get_config(True)
-        config = config.copy()
-        a_config = {
+        config = {
             'server': '127.0.0.1',
             'local_port': 1081,
             'port_password': {
@@ -222,7 +220,6 @@ def test():
             'fast_open': False,
             'verbose': 2
         }
-        config.update(a_config)
         manager = Manager(config)
         enc.append(manager)
         manager.run()

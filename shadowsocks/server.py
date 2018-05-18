@@ -92,7 +92,7 @@ def main():
     # if config.get('manager', 0):
     #     logging.info('entering manager mode')
     #     # 判断是否使用管理者？？？？这里我也还没有看源码
-    #     manager.run(config) 
+    #     manager.run(config)
     #     return
 
     tcp_servers = []
@@ -158,7 +158,7 @@ def main():
         a_config = config.copy()
         ipv6_ok = False
         logging.info("server start with protocol[%s] password [%s] method [%s] obfs [%s] obfs_param [%s]" %
-                (protocol, password, a_config['method'], obfs, obfs_param))
+                     (protocol, password, a_config['method'], obfs, obfs_param))
         if 'server_ipv6' in a_config:
             try:
                 if len(a_config['server_ipv6']) > 2 and a_config['server_ipv6'][0] == "[" and a_config['server_ipv6'][-1] == "]":
